@@ -1,0 +1,15 @@
+.venv/
+.cache/
+models/
+runs/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.env
+*.pem
+*.key
+.DS_Store
+.verify-venv/
+*.tmp
+*.log

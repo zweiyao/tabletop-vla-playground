@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tabletop-vla-playground"
+version = "0.1.0"
+description = "A tabletop robot playground for visual question answering and VLM-driven skills"
+requires-python = ">=3.11,<3.12"
+license = "MIT"
+dependencies = [
+  "robosuite==1.5.2", "mujoco==3.3.7", "numpy==1.26.4",
+  "torch==2.11.0", "torchvision==0.26.0", "transformers==4.57.6",
+  "accelerate>=1.0,<2", "gradio>=5.49,<6", "pillow>=11,<12",
+  "imageio[ffmpeg]>=2.37,<3", "pytest>=8,<9", "nvidia-ml-py>=12",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
