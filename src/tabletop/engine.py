@@ -27,13 +27,14 @@ class Engine:
         self.skills.steps = 0
         return self.env.images()
 
-    def run(self, instruction, emit):
+    def run(self, instruction, emit, use_wrist=False):
         self.stop.clear()
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
         out = Path("runs") / stamp
         out.mkdir(parents=True)
         log = {"seed": self.seed, "instruction": instruction, "model": MODEL_ID,
-               "revision": MODEL_REVISION, "history": [], "started": stamp}
+               "revision": MODEL_REVISION, "history": [], "started": stamp,
+               "cameras": ["front", "wrist"] if use_wrist else ["front"]}
         started = time.monotonic()
         frames = []
         status = []
@@ -50,8 +51,11 @@ class Engine:
                     raise SkillError("用户已停止")
                 images = self.env.images()
                 Image.fromarray(images["front"]).save(out / f"observe-{turn}.png")
+                if use_wrist:
+                    Image.fromarray(images["wrist"]).save(out / f"observe-{turn}-wrist.png")
                 emit(images, "\n".join(status + ["模型正在看图…"]))
-                response, raw = self.vlm.infer(images["front"], instruction, log["history"], self.stop)
+                response, raw = self.vlm.infer(images["front"], instruction, log["history"], self.stop,
+                                               images["wrist"] if use_wrist else None)
                 log.setdefault("responses", []).append({"raw": raw, "parsed": response})
                 if response["type"] == "answer":
                     final = response["text"]

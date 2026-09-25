@@ -7,9 +7,10 @@ from PIL import Image
 
 MODEL_ID = "Qwen/Qwen3-VL-8B-Instruct"
 MODEL_REVISION = "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b"
-SYSTEM = '''你是桌面机械臂助手。只根据当前正面相机图片和用户要求回答，不虚构看不到的信息。
+SYSTEM = '''你是桌面机械臂助手。只根据本次提供的相机图片和用户要求回答，不虚构看不到的信息。
 自然语言回答必须用中文，颜色名称写红色、绿色、蓝色；英文 red/green/blue 仅用于动作参数。
-场景有 red(红)、green(绿)、blue(蓝)积木。左右以图片视角为准。
+场景有 red(红)、green(绿)、blue(蓝)积木。默认左右以固定正面相机视角为准。
+图片会标明相机来源。如果提供腕部图片，可辅助观察遮挡和抓取细节；腕部相机会随夹爪转动，不要将其画面左右直接当作正面视角或基座方向。
 只输出一个 JSON 对象，不要代码围栏：
 回答问题或完成任务时：{"type":"answer","text":"中文回答"}
 需要动作时：{"type":"skill","skill":"pick","object":"red"}
@@ -63,7 +64,7 @@ class VLM:
             attn_implementation="sdpa", local_files_only=True,
         ).eval()
 
-    def infer(self, image, instruction, history=None, stop=None):
+    def infer(self, image, instruction, history=None, stop=None, wrist_image=None):
         from transformers import StoppingCriteria, StoppingCriteriaList
         stop = stop if stop is not None else threading.Event()
 
@@ -75,9 +76,14 @@ class VLM:
             raise RuntimeError("用户已停止")
         # History contains prior tool calls/results, never simulator coordinates.
         text = instruction + "\n本轮已执行记录：" + json.dumps(history or [], ensure_ascii=False)
-        messages = [{"role": "system", "content": [{"type": "text", "text": SYSTEM}]}, {"role": "user", "content": [
-            {"type": "image", "image": Image.fromarray(image)}, {"type": "text", "text": text},
-        ]}]
+        content = [{"type": "text", "text": "图片1：固定正面相机，默认左右方向以此视角为准。"},
+                   {"type": "image", "image": Image.fromarray(image)}]
+        if wrist_image is not None:
+            content.extend([{"type": "text", "text": "图片2：腕部相机，随夹爪转动的近距离视角。"},
+                            {"type": "image", "image": Image.fromarray(wrist_image)}])
+        content.append({"type": "text", "text": text})
+        messages = [{"role": "system", "content": [{"type": "text", "text": SYSTEM}]},
+                    {"role": "user", "content": content}]
         inputs = self.processor.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
                                                      return_dict=True, return_tensors="pt").to("cuda:0")
         with self.torch.inference_mode():

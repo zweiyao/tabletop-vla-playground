@@ -17,7 +17,7 @@ def main():
     engine = worker.submit(Engine).result()
     initial = worker.submit(engine.env.images).result()
 
-    def interact(prompt):
+    def interact(prompt, use_wrist):
         if not prompt.strip():
             yield initial["front"], initial["wrist"], "请输入问题或指令。"
             return
@@ -28,7 +28,7 @@ def main():
             except queue.Full:
                 updates.get_nowait()
                 updates.put_nowait((images["front"], images["wrist"], status))
-        future = worker.submit(engine.run, prompt.strip(), emit)
+        future = worker.submit(engine.run, prompt.strip(), emit, use_wrist=use_wrist)
         while not future.done() or not updates.empty():
             try:
                 yield updates.get(timeout=0.25)
@@ -50,6 +50,8 @@ def main():
             front = gr.Image(value=initial["front"], label="正面相机 · 左右以此视角为准", interactive=False)
             wrist = gr.Image(value=initial["wrist"], label="腕部相机", interactive=False)
         prompt = gr.Textbox(label="问题或指令", placeholder="例如：把红色积木叠在蓝色积木上")
+        use_wrist = gr.Checkbox(value=False, label="同时使用腕部相机提问模型",
+                               info="关闭：只用正面图片；开启：同时提供正面和腕部图片。对本次问答及后续动作观察生效。")
         with gr.Row():
             submit = gr.Button("发送", variant="primary")
             stop_btn = gr.Button("停止")
@@ -59,8 +61,8 @@ def main():
         gr.Examples(["桌上有哪些颜色的积木？", "红色积木在蓝色积木的左边还是右边？",
                      "抓起绿色积木", "把红色积木放到左侧", "把红色积木叠在蓝色积木上"], prompt)
         gr.Markdown("VLM 看图理解；抓放技能使用仿真位置完成控制。第一版不是端到端 VLA。")
-        submit.click(interact, prompt, [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
-        prompt.submit(interact, prompt, [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
+        submit.click(interact, [prompt, use_wrist], [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
+        prompt.submit(interact, [prompt, use_wrist], [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
         reset_btn.click(reset, seed, [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
         stop_btn.click(stop, outputs=status, queue=False)
     demo.queue(max_size=4).launch(server_name="127.0.0.1", server_port=args.port, share=False)
