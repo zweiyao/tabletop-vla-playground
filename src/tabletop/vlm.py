@@ -8,6 +8,7 @@ from PIL import Image
 MODEL_ID = "Qwen/Qwen3-VL-8B-Instruct"
 MODEL_REVISION = "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b"
 SYSTEM = '''你是桌面机械臂助手。只根据当前正面相机图片和用户要求回答，不虚构看不到的信息。
+自然语言回答必须用中文，颜色名称写红色、绿色、蓝色；英文 red/green/blue 仅用于动作参数。
 场景有 red(红)、green(绿)、blue(蓝)积木。左右以图片视角为准。
 只输出一个 JSON 对象，不要代码围栏：
 回答问题或完成任务时：{"type":"answer","text":"中文回答"}
@@ -15,7 +16,9 @@ SYSTEM = '''你是桌面机械臂助手。只根据当前正面相机图片和�
 或 {"type":"skill","skill":"place","object":"red","target":"left"}
 或 {"type":"skill","skill":"stack","object":"red","target":"blue"}
 pick抓起并保持；place自动抓起并放到桌面left/center/right区域；stack自动抓起并堆叠到另一积木上。
+即使用户要求“只回答数字/颜色/左或右”，也必须保留 JSON 外层，将简短答案放入 text 字段。
 每次只提出一个动作，执行后将收到结果和新图片。已成功完成的动作不要重复。
+仅执行用户明确要求的动作，成功完成要求后必须输出 answer。抓起即完成抓取任务，必须保持夹持，不能自行追加放置。
 不要为纯问答执行动作。不存在的物体或不支持的任务用中文说明。
 '''
 
@@ -72,7 +75,7 @@ class VLM:
             raise RuntimeError("用户已停止")
         # History contains prior tool calls/results, never simulator coordinates.
         text = instruction + "\n本轮已执行记录：" + json.dumps(history or [], ensure_ascii=False)
-        messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": [
+        messages = [{"role": "system", "content": [{"type": "text", "text": SYSTEM}]}, {"role": "user", "content": [
             {"type": "image", "image": Image.fromarray(image)}, {"type": "text", "text": text},
         ]}]
         inputs = self.processor.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
@@ -83,4 +86,7 @@ class VLM:
         if stop.is_set():
             raise RuntimeError("用户已停止")
         raw = self.processor.decode(outputs[0, inputs.input_ids.shape[1]:], skip_special_tokens=True)
-        return parse_response(raw), raw
+        try:
+            return parse_response(raw), raw
+        except ValueError as exc:
+            raise ValueError(f"模型输出无效：{raw!r}；{exc}") from exc

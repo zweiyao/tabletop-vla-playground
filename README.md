@@ -4,6 +4,10 @@ Panda 机械臂 + 桌面三色积木 + 正面/腕部相机。用中文看图问�
 
 **能力边界**：VLM 只接收正面 RGB 图像、用户指令和已执行技能记录。技能控制器使用仿真物体位置，通过 OSC 控制、夹爪接触和物理仿真执行动作；没有瞬移、焊接物体或把答案坐标交给模型。这不是端到端 VLA，也不代表真实机器人能力。第一版不包含模型训练。
 
+![Panda 实际堆叠场景](reports/smoke/after.png)
+
+已完成远程验收：抓取、放置、堆叠各 **19/20**；视觉问答 **28/30**；中文指令解析 **20/20**，闭环操作完成 **18/20**。这是固定开发用例的结果，详情和失败记录见 [验收报告](reports/README.md)。
+
 ## 环境与安装
 
 在远程 Linux / NVIDIA GPU 主机安装和运行；本地只编辑代码和打开浏览器。测试环境使用 Python 3.11、robosuite 1.5.2、MuJoCo 3.3.7、PyTorch 2.11（CUDA 13.0）和 Transformers 4.57.6。需要兼容的 NVIDIA 驱动、EGL 和 `uv`。
@@ -62,6 +66,7 @@ VLA 接口位于 `tabletop.policy`：`Policy.predict(Observation) -> (T,7)`。�
 ```bash
 .venv/bin/python -m pytest -q tests
 TABLETOP_GPU=0 .venv/bin/python scripts/evaluate_physics.py
+TABLETOP_GPU=0 .venv/bin/python scripts/evaluate_safety.py
 TABLETOP_GPU=0 .venv/bin/python scripts/evaluate_vlm.py
 ```
 

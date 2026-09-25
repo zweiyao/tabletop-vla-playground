@@ -1,0 +1,1390 @@
+[
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 100,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 100,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": false,
+    "raw": "{\"type\":\"answer\",\"text\":\"左\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 100,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 101,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 101,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 101,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 102,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 102,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 102,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 103,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 103,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 103,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 104,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 104,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 104,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 105,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 105,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 105,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 106,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 106,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"右\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 106,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 107,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 107,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"左\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 107,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "左"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、绿色、蓝色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 108,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 108,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": false,
+    "raw": "{\"type\":\"answer\",\"text\":\"左\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 108,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "右"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"红色、蓝色、绿色\"}",
+    "test": "qa",
+    "category": "colors",
+    "seed": 109,
+    "question": "桌上有哪些颜色的积木？只回答颜色名称。",
+    "expected": [
+      "红",
+      "绿",
+      "蓝"
+    ]
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"3\"}",
+    "test": "qa",
+    "category": "count",
+    "seed": 109,
+    "question": "桌面共有几个积木？只回答阿拉伯数字。",
+    "expected": "3"
+  },
+  {
+    "success": true,
+    "raw": "{\"type\":\"answer\",\"text\":\"左\"}",
+    "test": "qa",
+    "category": "relation",
+    "seed": 109,
+    "question": "按当前正面图片，红色积木在蓝色积木的左边还是右边？只回答左或右。",
+    "expected": "左"
+  },
+  {
+    "test": "command",
+    "seed": 200,
+    "instruction": "抓起红色积木",
+    "expected": {
+      "skill": "pick",
+      "object": "red",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 200,
+      "instruction": "抓起红色积木",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "red"
+          },
+          "result": {
+            "success": true,
+            "steps": 125,
+            "skill": "pick",
+            "object": "red"
+          }
+        }
+      ],
+      "started": "20260925T122541.565321Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"red\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "red"
+          }
+        },
+        {
+          "raw": "{\"type\": \"answer\", \"text\": \"红色积木已抓起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色积木已抓起并保持。"
+          }
+        }
+      ],
+      "answer": "红色积木已抓起并保持。",
+      "seconds": 2.369464725255966
+    }
+  },
+  {
+    "test": "command",
+    "seed": 201,
+    "instruction": "请把绿色方块拿起来",
+    "expected": {
+      "skill": "pick",
+      "object": "green",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 201,
+      "instruction": "请把绿色方块拿起来",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "green"
+          },
+          "result": {
+            "success": true,
+            "steps": 127,
+            "skill": "pick",
+            "object": "green"
+          }
+        }
+      ],
+      "started": "20260925T122544.376080Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"green\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "green"
+          }
+        },
+        {
+          "raw": "{\"type\": \"answer\", \"text\": \"绿色方块已被拿起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色方块已被拿起并保持。"
+          }
+        }
+      ],
+      "answer": "绿色方块已被拿起并保持。",
+      "seconds": 2.317482754588127
+    }
+  },
+  {
+    "test": "command",
+    "seed": 202,
+    "instruction": "拿起蓝色的那块积木并保持",
+    "expected": {
+      "skill": "pick",
+      "object": "blue",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 202,
+      "instruction": "拿起蓝色的那块积木并保持",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "blue"
+          },
+          "result": {
+            "success": true,
+            "steps": 117,
+            "skill": "pick",
+            "object": "blue"
+          }
+        }
+      ],
+      "started": "20260925T122547.039672Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"blue\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "blue"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"蓝色积木已抓起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "蓝色积木已抓起并保持。"
+          }
+        }
+      ],
+      "answer": "蓝色积木已抓起并保持。",
+      "seconds": 2.2445093663409352
+    }
+  },
+  {
+    "test": "command",
+    "seed": 203,
+    "instruction": "帮我抓住红色方块并抬高",
+    "expected": {
+      "skill": "pick",
+      "object": "red",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 203,
+      "instruction": "帮我抓住红色方块并抬高",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "red"
+          },
+          "result": {
+            "success": true,
+            "steps": 119,
+            "skill": "pick",
+            "object": "red"
+          }
+        }
+      ],
+      "started": "20260925T122549.652388Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"red\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "red"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色方块已被抓起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色方块已被抓起并保持。"
+          }
+        }
+      ],
+      "answer": "红色方块已被抓起并保持。",
+      "seconds": 2.198395458050072
+    }
+  },
+  {
+    "test": "command",
+    "seed": 204,
+    "instruction": "把绿色积木举起来",
+    "expected": {
+      "skill": "pick",
+      "object": "green",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 204,
+      "instruction": "把绿色积木举起来",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "green"
+          },
+          "result": {
+            "success": true,
+            "steps": 123,
+            "skill": "pick",
+            "object": "green"
+          }
+        }
+      ],
+      "started": "20260925T122552.210933Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"green\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "green"
+          }
+        },
+        {
+          "raw": "{\"type\": \"answer\", \"text\": \"绿色积木已被抓起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色积木已被抓起并保持。"
+          }
+        }
+      ],
+      "answer": "绿色积木已被抓起并保持。",
+      "seconds": 2.3391491090878844
+    }
+  },
+  {
+    "test": "command",
+    "seed": 205,
+    "instruction": "请抓起蓝色积木",
+    "expected": {
+      "skill": "pick",
+      "object": "blue",
+      "target": null
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 205,
+      "instruction": "请抓起蓝色积木",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "blue"
+          },
+          "result": {
+            "success": true,
+            "steps": 119,
+            "skill": "pick",
+            "object": "blue"
+          }
+        }
+      ],
+      "started": "20260925T122554.910012Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"pick\",\"object\":\"blue\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "pick",
+            "object": "blue"
+          }
+        },
+        {
+          "raw": "{\"type\": \"answer\", \"text\": \"蓝色积木已被抓起并保持。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "蓝色积木已被抓起并保持。"
+          }
+        }
+      ],
+      "answer": "蓝色积木已被抓起并保持。",
+      "seconds": 2.473829177208245
+    }
+  },
+  {
+    "test": "command",
+    "seed": 206,
+    "instruction": "把红色积木放到左侧区域",
+    "expected": {
+      "skill": "place",
+      "object": "red",
+      "target": "left"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 206,
+      "instruction": "把红色积木放到左侧区域",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "place",
+            "object": "red",
+            "target": "left"
+          },
+          "result": {
+            "success": true,
+            "steps": 365,
+            "skill": "place",
+            "object": "red",
+            "target": "left"
+          }
+        }
+      ],
+      "started": "20260925T122557.742096Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"red\",\"target\":\"left\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "red",
+            "target": "left"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色积木已成功放到左侧区域\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色积木已成功放到左侧区域"
+          }
+        }
+      ],
+      "answer": "红色积木已成功放到左侧区域",
+      "seconds": 4.357880108058453
+    }
+  },
+  {
+    "test": "command",
+    "seed": 207,
+    "instruction": "请把绿色方块放到右侧区域",
+    "expected": {
+      "skill": "place",
+      "object": "green",
+      "target": "right"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 207,
+      "instruction": "请把绿色方块放到右侧区域",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "place",
+            "object": "green",
+            "target": "right"
+          },
+          "result": {
+            "success": true,
+            "steps": 310,
+            "skill": "place",
+            "object": "green",
+            "target": "right"
+          }
+        }
+      ],
+      "started": "20260925T122602.511837Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"green\",\"target\":\"right\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "green",
+            "target": "right"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"绿色方块已放到右侧区域\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色方块已放到右侧区域"
+          }
+        }
+      ],
+      "answer": "绿色方块已放到右侧区域",
+      "seconds": 3.788969508372247
+    }
+  },
+  {
+    "test": "command",
+    "seed": 208,
+    "instruction": "把蓝色积木移到左边的放置区",
+    "expected": {
+      "skill": "place",
+      "object": "blue",
+      "target": "left"
+    },
+    "parse_success": true,
+    "physical_success": false,
+    "success": false,
+    "interaction": {
+      "seed": 208,
+      "instruction": "把蓝色积木移到左边的放置区",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [],
+      "started": "20260925T122606.693101Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"blue\",\"target\":\"left\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "blue",
+            "target": "left"
+          }
+        }
+      ],
+      "error": "未能到达目标位置，误差 0.013m",
+      "answer": "已停止：未能到达目标位置，误差 0.013m",
+      "seconds": 1.8611408956348896
+    }
+  },
+  {
+    "test": "command",
+    "seed": 209,
+    "instruction": "将红色方块摆到右侧区域",
+    "expected": {
+      "skill": "place",
+      "object": "red",
+      "target": "right"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 209,
+      "instruction": "将红色方块摆到右侧区域",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "place",
+            "object": "red",
+            "target": "right"
+          },
+          "result": {
+            "success": true,
+            "steps": 323,
+            "skill": "place",
+            "object": "red",
+            "target": "right"
+          }
+        }
+      ],
+      "started": "20260925T122608.983272Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"red\",\"target\":\"right\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "red",
+            "target": "right"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色方块已成功摆到右侧区域\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色方块已成功摆到右侧区域"
+          }
+        }
+      ],
+      "answer": "红色方块已成功摆到右侧区域",
+      "seconds": 4.086000553332269
+    }
+  },
+  {
+    "test": "command",
+    "seed": 210,
+    "instruction": "请将绿色积木搬到左侧区域",
+    "expected": {
+      "skill": "place",
+      "object": "green",
+      "target": "left"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 210,
+      "instruction": "请将绿色积木搬到左侧区域",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "place",
+            "object": "green",
+            "target": "left"
+          },
+          "result": {
+            "success": true,
+            "steps": 294,
+            "skill": "place",
+            "object": "green",
+            "target": "left"
+          }
+        }
+      ],
+      "started": "20260925T122613.455804Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"green\",\"target\":\"left\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "green",
+            "target": "left"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"绿色积木已成功搬到左侧区域\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色积木已成功搬到左侧区域"
+          }
+        }
+      ],
+      "answer": "绿色积木已成功搬到左侧区域",
+      "seconds": 3.8467867160215974
+    }
+  },
+  {
+    "test": "command",
+    "seed": 211,
+    "instruction": "把蓝色方块放到右边区域",
+    "expected": {
+      "skill": "place",
+      "object": "blue",
+      "target": "right"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 211,
+      "instruction": "把蓝色方块放到右边区域",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "place",
+            "object": "blue",
+            "target": "right"
+          },
+          "result": {
+            "success": true,
+            "steps": 298,
+            "skill": "place",
+            "object": "blue",
+            "target": "right"
+          }
+        }
+      ],
+      "started": "20260925T122617.707364Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"place\",\"object\":\"blue\",\"target\":\"right\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "place",
+            "object": "blue",
+            "target": "right"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"蓝色方块已放到右边区域\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "蓝色方块已放到右边区域"
+          }
+        }
+      ],
+      "answer": "蓝色方块已放到右边区域",
+      "seconds": 3.6537159271538258
+    }
+  },
+  {
+    "test": "command",
+    "seed": 212,
+    "instruction": "把红色积木叠在蓝色积木上",
+    "expected": {
+      "skill": "stack",
+      "object": "red",
+      "target": "blue"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 212,
+      "instruction": "把红色积木叠在蓝色积木上",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          },
+          "result": {
+            "success": true,
+            "steps": 278,
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          }
+        }
+      ],
+      "started": "20260925T122621.760670Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"red\",\"target\":\"blue\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色积木已叠在蓝色积木上\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色积木已叠在蓝色积木上"
+          }
+        }
+      ],
+      "answer": "红色积木已叠在蓝色积木上",
+      "seconds": 3.5798433534801006
+    }
+  },
+  {
+    "test": "command",
+    "seed": 213,
+    "instruction": "请把绿色方块放在红色方块上面",
+    "expected": {
+      "skill": "stack",
+      "object": "green",
+      "target": "red"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 213,
+      "instruction": "请把绿色方块放在红色方块上面",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "green",
+            "target": "red"
+          },
+          "result": {
+            "success": true,
+            "steps": 325,
+            "skill": "stack",
+            "object": "green",
+            "target": "red"
+          }
+        }
+      ],
+      "started": "20260925T122625.720011Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"green\",\"target\":\"red\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "green",
+            "target": "red"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"绿色方块已成功放在红色方块上面。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色方块已成功放在红色方块上面。"
+          }
+        }
+      ],
+      "answer": "绿色方块已成功放在红色方块上面。",
+      "seconds": 4.044143217615783
+    }
+  },
+  {
+    "test": "command",
+    "seed": 214,
+    "instruction": "将蓝色积木堆到绿色积木上",
+    "expected": {
+      "skill": "stack",
+      "object": "blue",
+      "target": "green"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 214,
+      "instruction": "将蓝色积木堆到绿色积木上",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "blue",
+            "target": "green"
+          },
+          "result": {
+            "success": true,
+            "steps": 277,
+            "skill": "stack",
+            "object": "blue",
+            "target": "green"
+          }
+        }
+      ],
+      "started": "20260925T122630.179450Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"blue\",\"target\":\"green\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "blue",
+            "target": "green"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"蓝色积木已堆到绿色积木上\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "蓝色积木已堆到绿色积木上"
+          }
+        }
+      ],
+      "answer": "蓝色积木已堆到绿色积木上",
+      "seconds": 3.5910556530579925
+    }
+  },
+  {
+    "test": "command",
+    "seed": 215,
+    "instruction": "红色积木放上面，绿色积木在下面，叠起来",
+    "expected": {
+      "skill": "stack",
+      "object": "red",
+      "target": "green"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 215,
+      "instruction": "红色积木放上面，绿色积木在下面，叠起来",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "green"
+          },
+          "result": {
+            "success": true,
+            "steps": 282,
+            "skill": "stack",
+            "object": "red",
+            "target": "green"
+          }
+        }
+      ],
+      "started": "20260925T122634.147516Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"red\",\"target\":\"green\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "green"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色积木已叠在绿色积木上面。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色积木已叠在绿色积木上面。"
+          }
+        }
+      ],
+      "answer": "红色积木已叠在绿色积木上面。",
+      "seconds": 3.629479831084609
+    }
+  },
+  {
+    "test": "command",
+    "seed": 216,
+    "instruction": "把绿色积木叠在蓝色积木顶上",
+    "expected": {
+      "skill": "stack",
+      "object": "green",
+      "target": "blue"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 216,
+      "instruction": "把绿色积木叠在蓝色积木顶上",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "green",
+            "target": "blue"
+          },
+          "result": {
+            "success": true,
+            "steps": 276,
+            "skill": "stack",
+            "object": "green",
+            "target": "blue"
+          }
+        }
+      ],
+      "started": "20260925T122638.181450Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"green\",\"target\":\"blue\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "green",
+            "target": "blue"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"绿色积木已叠在蓝色积木顶上\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "绿色积木已叠在蓝色积木顶上"
+          }
+        }
+      ],
+      "answer": "绿色积木已叠在蓝色积木顶上",
+      "seconds": 3.6222902359440923
+    }
+  },
+  {
+    "test": "command",
+    "seed": 217,
+    "instruction": "让蓝色方块站在红色方块上面",
+    "expected": {
+      "skill": "stack",
+      "object": "blue",
+      "target": "red"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 217,
+      "instruction": "让蓝色方块站在红色方块上面",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "blue",
+            "target": "red"
+          },
+          "result": {
+            "success": true,
+            "steps": 305,
+            "skill": "stack",
+            "object": "blue",
+            "target": "red"
+          }
+        }
+      ],
+      "started": "20260925T122642.203456Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"blue\",\"target\":\"red\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "blue",
+            "target": "red"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"蓝色方块已站在红色方块上面\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "蓝色方块已站在红色方块上面"
+          }
+        }
+      ],
+      "answer": "蓝色方块已站在红色方块上面",
+      "seconds": 4.139195290394127
+    }
+  },
+  {
+    "test": "command",
+    "seed": 218,
+    "instruction": "把红色方块放到蓝色方块顶部",
+    "expected": {
+      "skill": "stack",
+      "object": "red",
+      "target": "blue"
+    },
+    "parse_success": true,
+    "physical_success": true,
+    "success": true,
+    "interaction": {
+      "seed": 218,
+      "instruction": "把红色方块放到蓝色方块顶部",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [
+        {
+          "call": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          },
+          "result": {
+            "success": true,
+            "steps": 281,
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          }
+        }
+      ],
+      "started": "20260925T122646.742029Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"red\",\"target\":\"blue\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "red",
+            "target": "blue"
+          }
+        },
+        {
+          "raw": "{\"type\":\"answer\",\"text\":\"红色方块已成功堆叠在蓝色方块顶部。\"}",
+          "parsed": {
+            "type": "answer",
+            "text": "红色方块已成功堆叠在蓝色方块顶部。"
+          }
+        }
+      ],
+      "answer": "红色方块已成功堆叠在蓝色方块顶部。",
+      "seconds": 3.7863319562748075
+    }
+  },
+  {
+    "test": "command",
+    "seed": 219,
+    "instruction": "请将绿色积木堆在红色积木上方",
+    "expected": {
+      "skill": "stack",
+      "object": "green",
+      "target": "red"
+    },
+    "parse_success": true,
+    "physical_success": false,
+    "success": false,
+    "interaction": {
+      "seed": 219,
+      "instruction": "请将绿色积木堆在红色积木上方",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "history": [],
+      "started": "20260925T122650.902628Z",
+      "responses": [
+        {
+          "raw": "{\"type\":\"skill\",\"skill\":\"stack\",\"object\":\"green\",\"target\":\"red\"}",
+          "parsed": {
+            "type": "skill",
+            "skill": "stack",
+            "object": "green",
+            "target": "red"
+          }
+        }
+      ],
+      "error": "未能到达目标位置，误差 0.012m",
+      "answer": "已停止：未能到达目标位置，误差 0.012m",
+      "seconds": 1.8319136667996645
+    }
+  }
+]

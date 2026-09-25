@@ -1,0 +1,14 @@
+[
+  {
+    "test": "mid_motion_stop",
+    "success": true,
+    "steps": 5,
+    "message": "用户已停止"
+  },
+  {
+    "test": "mid_motion_timeout",
+    "success": true,
+    "steps": 5,
+    "message": "技能超时"
+  }
+]

@@ -38,7 +38,7 @@ def main():
 
     def reset(seed):
         images = worker.submit(engine.reset, int(seed)).result()
-        return images["front"], images["wrist"], f"已重置，随机种子 {int(seed)}"
+        return images["front"], images["wrist"], f"已切换到场景 {int(seed)}"
 
     def stop():
         engine.stop.set()
@@ -53,7 +53,7 @@ def main():
         with gr.Row():
             submit = gr.Button("发送", variant="primary")
             stop_btn = gr.Button("停止")
-            seed = gr.Number(value=0, precision=0, label="场景种子")
+            seed = gr.Number(value=0, precision=0, minimum=0, label="场景编号")
             reset_btn = gr.Button("重置场景")
         status = gr.Textbox(label="回答与执行状态", lines=8, interactive=False)
         gr.Examples(["桌上有哪些颜色的积木？", "红色积木在蓝色积木的左边还是右边？",

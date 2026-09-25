@@ -42,7 +42,7 @@ class Engine:
             if step % 10 == 0:
                 images = self.env.images(size=384)
                 frames.append(images["front"])
-                emit(images, "\n".join(status + [f"执行中：{step} 个控制步"]))
+                emit(images, "\n".join(status + ["机械臂正在操作…"]))
         self.skills.on_step = progress
         try:
             for turn in range(6):
@@ -58,10 +58,14 @@ class Engine:
                     break
                 if turn == 5:
                     raise SkillError("已达到本轮五个技能的上限")
-                status.append(f"{response['skill']}({response['object']}, {response.get('target', '')})")
+                names = {"red": "红色积木", "green": "绿色积木", "blue": "蓝色积木",
+                         "left": "左侧区域", "center": "中央区域", "right": "右侧区域"}
+                verb = {"pick": "抓起", "place": "放置", "stack": "堆叠"}[response["skill"]]
+                target = f" → {names[response['target']]}" if "target" in response else ""
+                status.append(f"{verb}{names[response['object']]}{target}")
                 result = self.skills.execute(response["skill"], response["object"], response.get("target"))
                 log["history"].append({"call": response, "result": result})
-                status.append("物理检查通过")
+                status.append("操作已完成")
         except (SkillError, ValueError, RuntimeError) as exc:
             final = f"已停止：{exc}"
             log["error"] = str(exc)
@@ -74,5 +78,5 @@ class Engine:
             Image.fromarray(images["front"]).save(out / "final.png")
             if frames:
                 imageio.mimsave(out / "video.mp4", frames, fps=2, macro_block_size=16)
-            emit(images, "\n".join(status + [final, f"记录：{out}"]))
+            emit(images, "\n".join(status + [final]))
         return log
