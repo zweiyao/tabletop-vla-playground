@@ -43,7 +43,7 @@ def fake_engine(tmp_path, monkeypatch, stop_at=None):
     def infer(observation, instruction, stop):
         engine.inferences.append(instruction)
         return np.zeros((10, 7)), {}
-    engine.pi05 = SimpleNamespace(alive=True, infer=infer)
+    engine.pi05 = SimpleNamespace(alive=True, adapter=None, infer=infer)
     engine.vlm = SimpleNamespace(translate_instruction=lambda text, stop: "pick up the red cube")
     # Deliberately no skills object: direct control must not call scripted skills.
     return engine
@@ -86,3 +86,58 @@ def test_missing_lora_does_not_fall_back_to_base(tmp_path, monkeypatch):
     log = engine.run("pick up the red cube", lambda *a: None, mode="pi05_lora", max_steps=5)
     assert log["termination"] == "error"
     assert not engine.executed and not engine.inferences
+
+
+@pytest.mark.parametrize("alive", [None, False])
+def test_send_never_starts_pi05(tmp_path, monkeypatch, alive):
+    engine = fake_engine(tmp_path, monkeypatch)
+    engine.pi05 = None if alive is None else SimpleNamespace(alive=False)
+    def unexpected(*args):
+        pytest.fail("Sending must not load or translate before a model is started")
+    monkeypatch.setattr("tabletop.pi05.Pi05", unexpected)
+    engine.vlm.translate_instruction = unexpected
+    log = engine.run("抓红块", lambda *a: None, mode="pi05", max_steps=5)
+    assert "未启动" in log["error"]
+    assert not engine.executed
+
+
+def test_send_different_weights_does_not_reload(tmp_path, monkeypatch):
+    engine = fake_engine(tmp_path, monkeypatch)
+    original = engine.pi05
+    log = engine.run("pick red", lambda *a: None, mode="pi05_lora", max_steps=5)
+    assert "权重与所选模型不同" in log["error"]
+    assert engine.pi05 is original
+    assert not engine.executed
+
+
+def test_explicit_start_is_idempotent_and_close_unloads(tmp_path, monkeypatch):
+    engine = fake_engine(tmp_path, monkeypatch)
+    engine.pi05 = None
+    created = []
+    def create(stop, adapter):
+        policy = SimpleNamespace(alive=True, adapter=adapter)
+        policy.close = lambda: setattr(policy, "alive", False)
+        created.append(policy)
+        return policy
+    monkeypatch.setattr("tabletop.pi05.Pi05", create)
+    assert "原始权重" in engine.start_pi05("pi05")
+    engine.start_pi05("pi05")
+    assert len(created) == 1
+    assert "未启动" in engine.close_pi05()
+    assert engine.pi05 is None and not created[0].alive
+
+
+def test_stop_drains_response_without_unloading(monkeypatch):
+    import io
+    from tabletop.pi05 import Pi05
+    policy = Pi05.__new__(Pi05)
+    output = io.StringIO('{"actions": []}\n{"actions": [[1]]}\n')
+    policy.process = SimpleNamespace(stdout=output)
+    policy.close = lambda: pytest.fail("Stopping an instruction must retain the model")
+    monkeypatch.setattr("tabletop.pi05.select.select", lambda *a: ([output], [], []))
+    stop = threading.Event()
+    stop.set()
+    with pytest.raises(RuntimeError, match="用户已停止"):
+        policy._receive(stop, close_on_stop=False)
+    stop.clear()
+    assert policy._receive(stop, close_on_stop=False)["actions"] == [[1]]

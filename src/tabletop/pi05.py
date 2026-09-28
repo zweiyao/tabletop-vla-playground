@@ -72,10 +72,10 @@ class Pi05:
                 self.process.wait()
         self.log.close()
 
-    def _receive(self, stop, timeout=60):
+    def _receive(self, stop, timeout=60, close_on_stop=True):
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            if stop.is_set():
+            if stop.is_set() and close_on_stop:
                 self.close()
                 raise RuntimeError("用户已停止")
             ready, _, _ = select.select([self.process.stdout], [], [], 0.1)
@@ -83,6 +83,10 @@ class Pi05:
                 line = self.process.stdout.readline()
                 if not line:
                     raise RuntimeError("π0.5 推理进程退出，请查看 runs/pi05-worker.log")
+                # Drain an in-flight response before stopping, so the next instruction
+                # cannot accidentally receive actions belonging to the previous one.
+                if stop.is_set():
+                    raise RuntimeError("用户已停止")
                 result = json.loads(line)
                 if "error" in result:
                     raise RuntimeError(result["error"])
@@ -102,5 +106,5 @@ class Pi05:
             self.process.stdin.flush()
         except (BrokenPipeError, OSError) as exc:
             raise RuntimeError("π0.5 推理进程连接已断开") from exc
-        result = self._receive(stop)
+        result = self._receive(stop, close_on_stop=False)
         return validate_actions(result["actions"]), result.get("timing", {})

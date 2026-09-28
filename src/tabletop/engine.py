@@ -30,6 +30,33 @@ class Engine:
         self.skills.steps = 0
         return self.env.images()
 
+    def pi05_status(self):
+        if self.pi05 is None or not self.pi05.alive:
+            return "π0.5 未启动"
+        return "π0.5 已启动：" + ("LoRA 权重" if self.pi05.adapter else "原始权重")
+
+    def start_pi05(self, mode):
+        from .pi05 import Pi05
+        if mode not in ("pi05", "pi05_lora"):
+            raise ValueError("请先选择 π0.5 原始权重或 LoRA")
+        adapter = str(Path(os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best")).resolve()) if mode == "pi05_lora" else None
+        if self.pi05 is not None and self.pi05.alive:
+            if self.pi05.adapter != adapter:
+                raise RuntimeError("请先关闭当前 π0.5，再启动所选权重")
+            return self.pi05_status()
+        if adapter and not all((Path(adapter) / name).is_file() for name in ("config.json", "adapter.safetensors")):
+            raise RuntimeError("LoRA 权重尚未准备好")
+        self.close_pi05()
+        self.stop.clear()
+        self.pi05 = Pi05(self.stop, adapter)
+        return self.pi05_status()
+
+    def close_pi05(self):
+        if self.pi05 is not None:
+            self.pi05.close()
+            self.pi05 = None
+        return self.pi05_status()
+
     def run(self, instruction, emit, use_wrist=False, mode="vlm", max_steps=300):
         if mode in ("pi05", "pi05_lora"):
             adapter = os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best") if mode == "pi05_lora" else None
@@ -94,7 +121,7 @@ class Engine:
         return log
 
     def run_pi05(self, instruction, emit, max_steps=300, adapter=None):
-        from .pi05 import Pi05, MODEL_ID as PI05_ID, MODEL_REVISION as PI05_REVISION
+        from .pi05 import MODEL_ID as PI05_ID, MODEL_REVISION as PI05_REVISION
         max_steps = int(max_steps)
         if not 5 <= max_steps <= 1000:
             raise ValueError("π0.5 执行步数必须在 5–1000 之间")
@@ -110,8 +137,12 @@ class Engine:
         started = time.monotonic()
         final = ""
         try:
+            adapter = str(Path(adapter).resolve()) if adapter else None
+            if self.pi05 is None or not self.pi05.alive:
+                raise RuntimeError("π0.5 未启动，请先点击“启动 π0.5”")
+            if getattr(self.pi05, "adapter", None) != adapter:
+                raise RuntimeError("当前启动的权重与所选模型不同，请先关闭 π0.5，再启动所选权重")
             if adapter:
-                adapter = str(Path(adapter).resolve())
                 config_path = Path(adapter) / "config.json"
                 if not config_path.is_file() or not (Path(adapter) / "adapter.safetensors").is_file():
                     raise RuntimeError("LoRA 权重尚未准备好")
@@ -123,12 +154,6 @@ class Engine:
             log["policy_instruction"] = english
             if self.stop.is_set():
                 raise RuntimeError("用户已停止")
-            if self.pi05 is not None and getattr(self.pi05, "adapter", None) != adapter:
-                self.pi05.close()
-                self.pi05 = None
-            if self.pi05 is None or not self.pi05.alive:
-                emit(self.env.images(), "正在加载 π0.5，首次使用需要稍等…")
-                self.pi05 = Pi05(self.stop, adapter)
             while log["steps"] < max_steps:
                 if self.stop.is_set():
                     raise RuntimeError("用户已停止")
