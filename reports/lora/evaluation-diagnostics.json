@@ -1,0 +1,54 @@
+{
+  "lora-baseline": {
+    "summary": {
+      "red": {
+        "success": 0,
+        "total": 20
+      },
+      "green": {
+        "success": 1,
+        "total": 20
+      },
+      "blue": {
+        "success": 0,
+        "total": 20
+      },
+      "home": {
+        "success": 0,
+        "total": 20
+      }
+    },
+    "successes": 1,
+    "errors": 0,
+    "home_final_median_position_error_m": 0.2338596601788302,
+    "home_final_median_orientation_error_rad": 1.260501978948798,
+    "home_final_gripper_open_count": 10,
+    "cases": 80
+  },
+  "lora-finetuned": {
+    "summary": {
+      "red": {
+        "success": 16,
+        "total": 20
+      },
+      "green": {
+        "success": 13,
+        "total": 20
+      },
+      "blue": {
+        "success": 17,
+        "total": 20
+      },
+      "home": {
+        "success": 0,
+        "total": 20
+      }
+    },
+    "successes": 46,
+    "errors": 0,
+    "home_final_median_position_error_m": 0.19798479457369536,
+    "home_final_median_orientation_error_rad": 1.6351302533603596,
+    "home_final_gripper_open_count": 14,
+    "cases": 80
+  }
+}

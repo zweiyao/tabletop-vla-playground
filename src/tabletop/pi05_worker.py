@@ -31,6 +31,10 @@ def main():
             _CONFIGS_DICT["pi05_libero"], checkpoint,
             sample_kwargs={"num_steps": 10}, pytorch_device="cuda:0",
         )
+        if adapter := os.environ.get("TABLETOP_PI05_ADAPTER"):
+            from lora import load
+            adapter_config = load(policy._model, adapter)
+            print(f"Loaded LoRA: {adapter}; training step={adapter_config['step']}", file=sys.stderr)
     wire.write(json.dumps({"ready": True, "model": "RLinf/RLinf-Pi05-LIBERO-SFT"}) + "\n")
     wire.flush()
     for line in sys.stdin:

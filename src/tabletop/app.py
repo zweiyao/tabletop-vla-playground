@@ -1,6 +1,8 @@
 """SSH-only, single-user Gradio interface; MuJoCo runs on one owner thread."""
 import argparse
+import os
 import queue
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from .runtime import check_gpu_idle, configure_gpu
 
@@ -46,11 +48,14 @@ def main():
 
     def change_mode(mode, seed):
         front_image, wrist_image, message = reset(seed)
-        return front_image, wrist_image, message, gr.update(interactive=mode == "vlm"), gr.update(visible=mode == "pi05")
+        return front_image, wrist_image, message, gr.update(interactive=mode == "vlm"), gr.update(visible=mode != "vlm")
 
     with gr.Blocks(title="桌面机械臂实验台") as demo:
         gr.Markdown("# 桌面机械臂实验台\n看图提问，或让 Panda 抓取、摆放、堆叠积木。")
-        mode = gr.Radio(choices=[("Qwen VLM · 问答与抓放技能", "vlm"), ("π0.5 · 直接动作控制", "pi05")],
+        model_choices = [("Qwen VLM · 问答与抓放技能", "vlm"), ("π0.5 原始权重 · 直接动作控制", "pi05")]
+        if (Path(os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best")) / "adapter.safetensors").is_file():
+            model_choices.append(("π0.5 LoRA · 红绿蓝抓取与回位", "pi05_lora"))
+        mode = gr.Radio(choices=model_choices,
                         value="vlm", label="使用模型", info="切换模型会按当前场景编号重置机械臂。π0.5 用于动作任务，中文自动翻译为英文。")
         with gr.Row():
             front = gr.Image(value=initial["front"], label="正面相机 · 左右以此视角为准", interactive=False)
@@ -66,8 +71,9 @@ def main():
             reset_btn = gr.Button("重置场景")
         status = gr.Textbox(label="回答与执行状态", lines=8, interactive=False)
         gr.Examples(["桌上有哪些颜色的积木？", "红色积木在蓝色积木的左边还是右边？",
-                     "抓起绿色积木", "把红色积木放到左侧", "把红色积木叠在蓝色积木上"], prompt)
-        gr.Markdown("VLM 使用抓放技能；π0.5 根据图像和机械臂状态直接预测动作。π0.5 使用 LIBERO 微调权重，新场景中的任务成功率尚未保证。")
+                     "抓起绿色积木", "空夹爪回到初始位置和朝向，并保持张开",
+                     "把红色积木放到左侧", "把红色积木叠在蓝色积木上"], prompt)
+        gr.Markdown("VLM 使用抓放技能；π0.5 根据图像和指令直接预测动作。LoRA 针对三色积木抓取和空夹爪回位训练，实际成功率请参阅实验报告。")
         submit.click(interact, [prompt, use_wrist, mode, max_steps], [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
         prompt.submit(interact, [prompt, use_wrist, mode, max_steps], [front, wrist, status], concurrency_id="scene", concurrency_limit=1)
         mode.change(change_mode, [mode, seed], [front, wrist, status, use_wrist, max_steps], concurrency_id="scene", concurrency_limit=1)

@@ -1,5 +1,6 @@
 """One simulation owner, bounded tool loop, and per-run audit artifacts."""
 import json
+import os
 import time
 import threading
 from pathlib import Path
@@ -30,8 +31,9 @@ class Engine:
         return self.env.images()
 
     def run(self, instruction, emit, use_wrist=False, mode="vlm", max_steps=300):
-        if mode == "pi05":
-            return self.run_pi05(instruction, emit, max_steps)
+        if mode in ("pi05", "pi05_lora"):
+            adapter = os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best") if mode == "pi05_lora" else None
+            return self.run_pi05(instruction, emit, max_steps, adapter)
         if mode != "vlm":
             raise ValueError("未知模型选项")
         self.stop.clear()
@@ -91,7 +93,7 @@ class Engine:
             emit(images, "\n".join(status + [final]))
         return log
 
-    def run_pi05(self, instruction, emit, max_steps=300):
+    def run_pi05(self, instruction, emit, max_steps=300, adapter=None):
         from .pi05 import Pi05, MODEL_ID as PI05_ID, MODEL_REVISION as PI05_REVISION
         max_steps = int(max_steps)
         if not 5 <= max_steps <= 1000:
@@ -100,7 +102,7 @@ class Engine:
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
         out = Path("runs") / stamp
         out.mkdir(parents=True)
-        log = {"model": PI05_ID, "revision": PI05_REVISION, "mode": "pi05", "seed": self.seed,
+        log = {"model": PI05_ID, "revision": PI05_REVISION, "mode": "pi05_lora" if adapter else "pi05", "seed": self.seed,
                "instruction": instruction, "cameras": ["agentview", "wrist"], "started": stamp,
                "max_steps": max_steps, "steps": 0, "actions": [], "timings": [],
                "action_format": "LIBERO normalized OSC delta xyz/rotvec/gripper, clipped [-1,1]"}
@@ -108,6 +110,12 @@ class Engine:
         started = time.monotonic()
         final = ""
         try:
+            if adapter:
+                adapter = str(Path(adapter).resolve())
+                config_path = Path(adapter) / "config.json"
+                if not config_path.is_file() or not (Path(adapter) / "adapter.safetensors").is_file():
+                    raise RuntimeError("LoRA 权重尚未准备好")
+                log["adapter"] = {"path": adapter, "config": json.loads(config_path.read_text())}
             english = instruction
             if any("\u4e00" <= c <= "\u9fff" for c in instruction):
                 emit(self.env.images(), "正在将任务翻译为 π0.5 使用的英文指令…")
@@ -115,9 +123,12 @@ class Engine:
             log["policy_instruction"] = english
             if self.stop.is_set():
                 raise RuntimeError("用户已停止")
+            if self.pi05 is not None and getattr(self.pi05, "adapter", None) != adapter:
+                self.pi05.close()
+                self.pi05 = None
             if self.pi05 is None or not self.pi05.alive:
                 emit(self.env.images(), "正在加载 π0.5，首次使用需要稍等…")
-                self.pi05 = Pi05(self.stop)
+                self.pi05 = Pi05(self.stop, adapter)
             while log["steps"] < max_steps:
                 if self.stop.is_set():
                     raise RuntimeError("用户已停止")

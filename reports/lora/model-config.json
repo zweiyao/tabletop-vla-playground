@@ -1,0 +1,10 @@
+{
+  "action_dim": 32,
+  "action_horizon": 10,
+  "max_token_len": 200,
+  "dtype": "bfloat16",
+  "paligemma_variant": "gemma_2b",
+  "action_expert_variant": "gemma_300m",
+  "pi05": true,
+  "discrete_state_input": false
+}

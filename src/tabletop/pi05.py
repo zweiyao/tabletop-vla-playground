@@ -26,7 +26,7 @@ def validate_actions(actions):
 
 
 class Pi05:
-    def __init__(self, stop):
+    def __init__(self, stop, adapter=None):
         root = Path(__file__).resolve().parents[2]
         legacy = Path(os.environ.get("TABLETOP_PI05_ROOT", root.parent / "simulation"))
         python = Path(os.environ.get("TABLETOP_PI05_PYTHON", legacy / ".venv/bin/python"))
@@ -34,6 +34,10 @@ class Pi05:
         if not python.is_file() or not (checkpoint / "model.safetensors").is_file():
             raise RuntimeError("π0.5 环境或权重未配置，请查看 README 中的 π0.5 部署说明")
         env = os.environ.copy()
+        self.adapter = str(Path(adapter).resolve()) if adapter else None
+        env.pop("TABLETOP_PI05_ADAPTER", None)
+        if self.adapter:
+            env["TABLETOP_PI05_ADAPTER"] = self.adapter
         env.update({"TABLETOP_PI05_CHECKPOINT": str(checkpoint),
                     "PYTHONPATH": str(legacy / "repos/RLinf"),
                     "OPENPI_DATA_HOME": str(legacy / ".cache/openpi"),

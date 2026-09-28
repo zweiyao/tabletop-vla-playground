@@ -1,0 +1,12 @@
+{
+  "mode": "pi05_lora",
+  "seed": 0,
+  "instruction": "抓起红色积木",
+  "policy_instruction": "Pick up the red block",
+  "steps": 250,
+  "termination": "step_limit",
+  "error": null,
+  "seconds": 89.83793336246163,
+  "adapter_step": 1500,
+  "run": "runs/20260928T072806.325132Z"
+}

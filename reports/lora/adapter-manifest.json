@@ -1,0 +1,266 @@
+{
+  "best": {
+    "sha256": "408992bdedb8192086f02a85e674b354028c1a17127e9c389b3b2077971c1484",
+    "bytes": 14296800,
+    "config": {
+      "data": "data/tabletop-four-v1",
+      "output": "adapters/tabletop-four-v1",
+      "checkpoint": "../simulation/checkpoints/RLinf-Pi05-LIBERO-SFT",
+      "steps": 1500,
+      "batch_size": 8,
+      "lr": 0.0001,
+      "rank": 16,
+      "alpha": 32,
+      "seed": 42,
+      "validate_every": 250,
+      "smoke": false,
+      "base_model": "RLinf/RLinf-Pi05-LIBERO-SFT",
+      "base_revision": "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d",
+      "trainable_parameters": 7029760,
+      "total_parameters": 3623787280,
+      "target_modules": "(?:paligemma_with_expert\\.gemma_expert\\.model\\.layers\\.\\d+\\.(?:self_attn\\.(?:q_proj|k_proj|v_proj|o_proj)|mlp\\.(?:gate_proj|up_proj|down_proj))|action_in_proj|action_out_proj|time_mlp_in|time_mlp_out)",
+      "train_episodes": 320,
+      "val_episodes": 48,
+      "train_frames": 43101,
+      "action_horizon": 10,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "weight_decay": 0.01,
+      "warmup_steps": 100,
+      "grad_clip": 1.0,
+      "gripper_loss_weight": 2.0,
+      "augmentation": "no image augmentation; task paraphrases",
+      "language_prompts": {
+        "red": [
+          "pick up the red cube",
+          "Pick up the red block",
+          "grasp and lift the red cube"
+        ],
+        "green": [
+          "pick up the green cube",
+          "Pick up the green block",
+          "grasp and lift the green cube"
+        ],
+        "blue": [
+          "pick up the blue cube",
+          "Pick up the blue block",
+          "grasp and lift the blue cube"
+        ],
+        "home": [
+          "return to the initial end effector position and orientation with the gripper open",
+          "return to the initial position",
+          "move the arm back to its starting pose"
+        ]
+      },
+      "effective_batch_size": 8,
+      "prefix_frozen": true,
+      "discrete_state_input": false,
+      "normalization": "unchanged base checkpoint quantiles",
+      "loss": "flow MSE: first 7 dimensions only, gripper weight 2; padding ignored",
+      "dropout": 0.0,
+      "step": 1500,
+      "val_loss": 0.04001156314431379
+    }
+  },
+  "last": {
+    "sha256": "408992bdedb8192086f02a85e674b354028c1a17127e9c389b3b2077971c1484",
+    "bytes": 14296800,
+    "config": {
+      "data": "data/tabletop-four-v1",
+      "output": "adapters/tabletop-four-v1",
+      "checkpoint": "../simulation/checkpoints/RLinf-Pi05-LIBERO-SFT",
+      "steps": 1500,
+      "batch_size": 8,
+      "lr": 0.0001,
+      "rank": 16,
+      "alpha": 32,
+      "seed": 42,
+      "validate_every": 250,
+      "smoke": false,
+      "base_model": "RLinf/RLinf-Pi05-LIBERO-SFT",
+      "base_revision": "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d",
+      "trainable_parameters": 7029760,
+      "total_parameters": 3623787280,
+      "target_modules": "(?:paligemma_with_expert\\.gemma_expert\\.model\\.layers\\.\\d+\\.(?:self_attn\\.(?:q_proj|k_proj|v_proj|o_proj)|mlp\\.(?:gate_proj|up_proj|down_proj))|action_in_proj|action_out_proj|time_mlp_in|time_mlp_out)",
+      "train_episodes": 320,
+      "val_episodes": 48,
+      "train_frames": 43101,
+      "action_horizon": 10,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "weight_decay": 0.01,
+      "warmup_steps": 100,
+      "grad_clip": 1.0,
+      "gripper_loss_weight": 2.0,
+      "augmentation": "no image augmentation; task paraphrases",
+      "language_prompts": {
+        "red": [
+          "pick up the red cube",
+          "Pick up the red block",
+          "grasp and lift the red cube"
+        ],
+        "green": [
+          "pick up the green cube",
+          "Pick up the green block",
+          "grasp and lift the green cube"
+        ],
+        "blue": [
+          "pick up the blue cube",
+          "Pick up the blue block",
+          "grasp and lift the blue cube"
+        ],
+        "home": [
+          "return to the initial end effector position and orientation with the gripper open",
+          "return to the initial position",
+          "move the arm back to its starting pose"
+        ]
+      },
+      "effective_batch_size": 8,
+      "prefix_frozen": true,
+      "discrete_state_input": false,
+      "normalization": "unchanged base checkpoint quantiles",
+      "loss": "flow MSE: first 7 dimensions only, gripper weight 2; padding ignored",
+      "dropout": 0.0,
+      "step": 1500,
+      "val_loss": 0.04001156314431379
+    }
+  },
+  "validation-250": {
+    "sha256": "a7561bcbcc334395aa210a688f3972172f7164c2672f122432f96cd1ca872153",
+    "bytes": 14296800,
+    "config": {
+      "data": "data/tabletop-four-v1",
+      "output": "adapters/tabletop-four-v1",
+      "checkpoint": "../simulation/checkpoints/RLinf-Pi05-LIBERO-SFT",
+      "steps": 1500,
+      "batch_size": 8,
+      "lr": 0.0001,
+      "rank": 16,
+      "alpha": 32,
+      "seed": 42,
+      "validate_every": 250,
+      "smoke": false,
+      "base_model": "RLinf/RLinf-Pi05-LIBERO-SFT",
+      "base_revision": "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d",
+      "trainable_parameters": 7029760,
+      "total_parameters": 3623787280,
+      "target_modules": "(?:paligemma_with_expert\\.gemma_expert\\.model\\.layers\\.\\d+\\.(?:self_attn\\.(?:q_proj|k_proj|v_proj|o_proj)|mlp\\.(?:gate_proj|up_proj|down_proj))|action_in_proj|action_out_proj|time_mlp_in|time_mlp_out)",
+      "train_episodes": 320,
+      "val_episodes": 48,
+      "train_frames": 43101,
+      "action_horizon": 10,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "weight_decay": 0.01,
+      "warmup_steps": 100,
+      "grad_clip": 1.0,
+      "gripper_loss_weight": 2.0,
+      "augmentation": "no image augmentation; task paraphrases",
+      "language_prompts": {
+        "red": [
+          "pick up the red cube",
+          "Pick up the red block",
+          "grasp and lift the red cube"
+        ],
+        "green": [
+          "pick up the green cube",
+          "Pick up the green block",
+          "grasp and lift the green cube"
+        ],
+        "blue": [
+          "pick up the blue cube",
+          "Pick up the blue block",
+          "grasp and lift the blue cube"
+        ],
+        "home": [
+          "return to the initial end effector position and orientation with the gripper open",
+          "return to the initial position",
+          "move the arm back to its starting pose"
+        ]
+      },
+      "effective_batch_size": 8,
+      "prefix_frozen": true,
+      "discrete_state_input": false,
+      "normalization": "unchanged base checkpoint quantiles",
+      "loss": "flow MSE: first 7 dimensions only, gripper weight 2; padding ignored",
+      "dropout": 0.0,
+      "step": 250,
+      "val_loss": 0.046837631069744624
+    }
+  },
+  "validation-1000": {
+    "sha256": "cd3d2c8df068f32710089846a497ad4187a14ba91bdcb0aa34cbe19f9c9689f7",
+    "bytes": 14296800,
+    "config": {
+      "data": "data/tabletop-four-v1",
+      "output": "adapters/tabletop-four-v1",
+      "checkpoint": "../simulation/checkpoints/RLinf-Pi05-LIBERO-SFT",
+      "steps": 1500,
+      "batch_size": 8,
+      "lr": 0.0001,
+      "rank": 16,
+      "alpha": 32,
+      "seed": 42,
+      "validate_every": 250,
+      "smoke": false,
+      "base_model": "RLinf/RLinf-Pi05-LIBERO-SFT",
+      "base_revision": "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d",
+      "trainable_parameters": 7029760,
+      "total_parameters": 3623787280,
+      "target_modules": "(?:paligemma_with_expert\\.gemma_expert\\.model\\.layers\\.\\d+\\.(?:self_attn\\.(?:q_proj|k_proj|v_proj|o_proj)|mlp\\.(?:gate_proj|up_proj|down_proj))|action_in_proj|action_out_proj|time_mlp_in|time_mlp_out)",
+      "train_episodes": 320,
+      "val_episodes": 48,
+      "train_frames": 43101,
+      "action_horizon": 10,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "weight_decay": 0.01,
+      "warmup_steps": 100,
+      "grad_clip": 1.0,
+      "gripper_loss_weight": 2.0,
+      "augmentation": "no image augmentation; task paraphrases",
+      "language_prompts": {
+        "red": [
+          "pick up the red cube",
+          "Pick up the red block",
+          "grasp and lift the red cube"
+        ],
+        "green": [
+          "pick up the green cube",
+          "Pick up the green block",
+          "grasp and lift the green cube"
+        ],
+        "blue": [
+          "pick up the blue cube",
+          "Pick up the blue block",
+          "grasp and lift the blue cube"
+        ],
+        "home": [
+          "return to the initial end effector position and orientation with the gripper open",
+          "return to the initial position",
+          "move the arm back to its starting pose"
+        ]
+      },
+      "effective_batch_size": 8,
+      "prefix_frozen": true,
+      "discrete_state_input": false,
+      "normalization": "unchanged base checkpoint quantiles",
+      "loss": "flow MSE: first 7 dimensions only, gripper weight 2; padding ignored",
+      "dropout": 0.0,
+      "step": 1000,
+      "val_loss": 0.04110956995282322
+    }
+  }
+}

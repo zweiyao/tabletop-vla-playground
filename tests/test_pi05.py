@@ -64,3 +64,25 @@ def test_pi05_stop_discards_remaining_chunk(tmp_path, monkeypatch):
     assert len(engine.executed) == 2
     assert len(engine.inferences) == 1
     assert log["termination"] == "stopped"
+
+
+def test_lora_mode_records_selected_adapter(tmp_path, monkeypatch):
+    engine = fake_engine(tmp_path, monkeypatch)
+    adapter = tmp_path / "adapter"
+    adapter.mkdir()
+    (adapter / "config.json").write_text('{"step": 250}')
+    (adapter / "adapter.safetensors").write_bytes(b"mock weights; model is replaced in this test")
+    engine.pi05.adapter = str(adapter)
+    monkeypatch.setenv("TABLETOP_PI05_LORA", str(adapter))
+    log = engine.run("pick up the red cube", lambda *a: None, mode="pi05_lora", max_steps=5)
+    assert log["mode"] == "pi05_lora"
+    assert log["adapter"]["config"]["step"] == 250
+    assert len(engine.executed) == 5
+
+
+def test_missing_lora_does_not_fall_back_to_base(tmp_path, monkeypatch):
+    engine = fake_engine(tmp_path, monkeypatch)
+    monkeypatch.setenv("TABLETOP_PI05_LORA", str(tmp_path / "missing"))
+    log = engine.run("pick up the red cube", lambda *a: None, mode="pi05_lora", max_steps=5)
+    assert log["termination"] == "error"
+    assert not engine.executed and not engine.inferences

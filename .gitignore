@@ -13,3 +13,5 @@ __pycache__/
 .verify-venv/
 *.tmp
 *.log
+data/
+adapters/

@@ -2,9 +2,11 @@
 
 Panda 机械臂 + 桌面三色积木 + 正面/腕部相机。用中文看图问答，或者让 Qwen3-VL 调用抓取、摆放、堆叠技能，并在浏览器查看结果。
 
-页面新增 **π0.5 · 直接动作控制**：接收双相机、机械臂状态和语言指令，直接预测并执行动作，不调用抓放技能。当前采用 LIBERO 微调权重；在这套自定义三色积木场景的首轮抓取测试中未成功，部署可用不代表任务成功率达标。见 [π0.5 实测](reports/pi05/README.md)。
+页面提供 **π0.5 原始权重 · 直接动作控制**：根据双相机和语言指令直接预测并执行动作，不调用抓放技能。原始版本采用 LIBERO 微调权重；在这套自定义三色积木场景的早期抓取测试中未成功，见 [π0.5 初次实测](reports/pi05/README.md)。场景专用 LoRA 的独立测试见下方报告。
 
-**能力边界**：VLM 接收相机 RGB 图像、用户指令和已执行技能记录。默认只用正面图片；勾选“同时使用腕部相机提问模型”后，会同时输入两张标明视角的图片，每次动作后也按本轮选项重新观察。默认左右仍按正面视角解释。技能控制器使用仿真物体位置，通过 OSC 控制、夹爪接触和物理仿真执行动作；没有瞬移、焊接物体或把答案坐标交给模型。这不是端到端 VLA，也不代表真实机器人能力。第一版不包含模型训练。
+四任务示范采集与 LoRA 监督微调见 [详细实验报告](reports/LoRA四任务微调报告.md)。保存 `adapters/tabletop-four-v1/best` 后重启服务，会新增“π0.5 LoRA · 红绿蓝抓取与回位”选项；原始权重仍可单独选择。也可通过 `TABLETOP_PI05_LORA` 指定增量权重目录。注意该 LIBERO 配置 `discrete_state_input=False`：状态虽然在接口中保留，模型当前并不直接编码本体状态。
+
+**Qwen 模式的能力边界**：VLM 接收相机 RGB 图像、用户指令和已执行技能记录。默认只用正面图片；勾选“同时使用腕部相机提问模型”后，会同时输入两张标明视角的图片，每次动作后也按本轮选项重新观察。默认左右仍按正面视角解释。技能控制器使用仿真物体位置，通过 OSC 控制、夹爪接触和物理仿真执行动作；没有瞬移、焊接物体或把答案坐标交给模型。这条技能链路不是端到端 VLA，也不代表真实机器人能力。
 
 ![Panda 实际堆叠场景](reports/smoke/after.png)
 
@@ -51,7 +53,7 @@ ssh -N -L 7860:127.0.0.1:7860 -o IdentitiesOnly=yes \
 
 ### π0.5 部署和使用
 
-在页面“使用模型”选择 **π0.5 · 直接动作控制**，输入动作指令并发送。切换模式会重置场景；默认执行最多 300 个仿真控制步，可调整到 50–1000 步或随时停止。模型每次预测 10 步，只执行前 5 步后重新观察。20 Hz 指仿真控制频率，推理等待不推进仿真。达到步数上限不会自动判定任务成功。
+在页面“使用模型”选择 **π0.5 原始权重 · 直接动作控制** 或 **π0.5 LoRA · 红绿蓝抓取与回位**，输入动作指令并发送。切换模式会重置场景；默认执行最多 300 个仿真控制步，可调整到 50–1000 步或随时停止。模型每次预测 10 步，只执行前 5 步后重新观察。20 Hz 指仿真控制频率，推理等待不推进仿真。达到步数上限不会自动判定任务成功。
 
 中文指令先由 Qwen 进行一次纯文本英译，随后全部机械臂动作由 π0.5 生成。问答继续使用 Qwen 模式。π0.5 固定使用 `agentview` 斜视相机和腕部相机；“使用腕部相机提问”开关仅影响 VLM。网页仍显示正面和腕部画面，模型实际输入图片保存在每轮日志中。
 
@@ -70,6 +72,7 @@ TABLETOP_GPU=0 bash scripts/run.sh
 
 - [RLinf](https://github.com/RLinf/RLinf) checkout 位于 `$TABLETOP_PI05_ROOT/repos/RLinf`，已验证 commit `db66ac56d1aa4a9c8441c4026e4212b21811970d`。
 - 独立 Python 环境包含 `rlinf-openpi==0.1.1`、PyTorch `2.11.0+cu130`、Transformers `4.57.6` 及 RLinf/openpi 要求的 Transformers 补丁。不能只在 Qwen 环境里安装普通 openpi 后混用。
+- LoRA 训练/加载另需该独立环境内的 `peft==0.21.0`、`safetensors==0.8.0`；完整已验证版本见 [环境记录](reports/lora/environment.json)。
 - [RLinf/RLinf-Pi05-LIBERO-SFT](https://huggingface.co/RLinf/RLinf-Pi05-LIBERO-SFT)，revision `45ccfcc4e28634f1576ebf78cab0fbe2fd82432d`，包含 `model.safetensors` 和 `physical-intelligence/libero/norm_stats.json`。
 - openpi tokenizer 缓存位于 `$TABLETOP_PI05_ROOT/.cache/openpi/big_vision/paligemma_tokenizer.model`。
 

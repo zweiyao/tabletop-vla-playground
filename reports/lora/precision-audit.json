@@ -1,0 +1,13 @@
+{
+  "adapter_parameter_dtypes": {
+    "torch.float32": 99328,
+    "torch.bfloat16": 6930432
+  },
+  "optimizer_state_dtypes": {
+    "step:torch.float32": 260,
+    "exp_avg:torch.bfloat16": 6930432,
+    "exp_avg_sq:torch.bfloat16": 6930432,
+    "exp_avg:torch.float32": 99328,
+    "exp_avg_sq:torch.float32": 99328
+  }
+}
