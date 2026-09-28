@@ -1,4 +1,4 @@
-"""Public VLA interface. No pretrained VLA is included in v1."""
+"""Metric VLA interface; LIBERO π0.5 uses its separate normalized-action adapter."""
 from dataclasses import dataclass
 from typing import Protocol
 import numpy as np

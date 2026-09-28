@@ -1,6 +1,8 @@
-# 桌面机械臂 VLM 实验台
+# 桌面机械臂 VLM / π0.5 实验台
 
 Panda 机械臂 + 桌面三色积木 + 正面/腕部相机。用中文看图问答，或者让 Qwen3-VL 调用抓取、摆放、堆叠技能，并在浏览器查看结果。
+
+页面新增 **π0.5 · 直接动作控制**：接收双相机、机械臂状态和语言指令，直接预测并执行动作，不调用抓放技能。当前采用 LIBERO 微调权重；在这套自定义三色积木场景的首轮抓取测试中未成功，部署可用不代表任务成功率达标。见 [π0.5 实测](reports/pi05/README.md)。
 
 **能力边界**：VLM 接收相机 RGB 图像、用户指令和已执行技能记录。默认只用正面图片；勾选“同时使用腕部相机提问模型”后，会同时输入两张标明视角的图片，每次动作后也按本轮选项重新观察。默认左右仍按正面视角解释。技能控制器使用仿真物体位置，通过 OSC 控制、夹爪接触和物理仿真执行动作；没有瞬移、焊接物体或把答案坐标交给模型。这不是端到端 VLA，也不代表真实机器人能力。第一版不包含模型训练。
 
@@ -9,6 +11,8 @@ Panda 机械臂 + 桌面三色积木 + 正面/腕部相机。用中文看图问�
 已完成远程验收：抓取、放置、堆叠各 **19/20**；视觉问答 **28/30**；中文指令解析 **20/20**，闭环操作完成 **18/20**。这是固定开发用例的结果，详情和失败记录见 [验收报告](reports/README.md)。
 
 上述分数来自初版单正面相机评测；新增的可选腕部相机模式单独验证输入与问答功能，不沿用这些分数作为双相机表现。
+
+这些分数也不适用于 π0.5；下面的 VLM 能力说明和五技能上限仅针对 Qwen 模式。
 
 ## 环境与安装
 
@@ -44,6 +48,38 @@ ssh -N -L 7860:127.0.0.1:7860 -o IdentitiesOnly=yes \
 每个交互保存到 `runs/<UTC时间>/`，包含输入、模型原始输出、技能结果、耗时、观察图片和操作视频。`runs/` 不提交到 Git。网页是经 SSH 访问的单用户共享场景，不提供多用户场景隔离。
 
 ## 可替换接口
+
+### π0.5 部署和使用
+
+在页面“使用模型”选择 **π0.5 · 直接动作控制**，输入动作指令并发送。切换模式会重置场景；默认执行最多 300 个仿真控制步，可调整到 50–1000 步或随时停止。模型每次预测 10 步，只执行前 5 步后重新观察。20 Hz 指仿真控制频率，推理等待不推进仿真。达到步数上限不会自动判定任务成功。
+
+中文指令先由 Qwen 进行一次纯文本英译，随后全部机械臂动作由 π0.5 生成。问答继续使用 Qwen 模式。π0.5 固定使用 `agentview` 斜视相机和腕部相机；“使用腕部相机提问”开关仅影响 VLM。网页仍显示正面和腕部画面，模型实际输入图片保存在每轮日志中。
+
+当前远程部署复用相邻 `simulation` 目录内已有的环境和权重，通过独立子进程隔离与 Qwen 的依赖；不启动旧训练。两个模型和渲染共用 `TABLETOP_GPU` 指定的一张卡，首次选择 π0.5 时按需加载。没有重新下载 7.47 GB 权重。主项目的 `setup.sh` 只安装 VLM 环境，不会自动安装下面的可选 π0.5 运行时。
+
+可通过启动前的环境变量指定已准备好的资源：
+
+```bash
+export TABLETOP_PI05_ROOT=/path/to/simulation
+export TABLETOP_PI05_PYTHON="$TABLETOP_PI05_ROOT/.venv/bin/python"
+export TABLETOP_PI05_CHECKPOINT="$TABLETOP_PI05_ROOT/checkpoints/RLinf-Pi05-LIBERO-SFT"
+TABLETOP_GPU=0 bash scripts/run.sh
+```
+
+所需资源：
+
+- [RLinf](https://github.com/RLinf/RLinf) checkout 位于 `$TABLETOP_PI05_ROOT/repos/RLinf`，已验证 commit `db66ac56d1aa4a9c8441c4026e4212b21811970d`。
+- 独立 Python 环境包含 `rlinf-openpi==0.1.1`、PyTorch `2.11.0+cu130`、Transformers `4.57.6` 及 RLinf/openpi 要求的 Transformers 补丁。不能只在 Qwen 环境里安装普通 openpi 后混用。
+- [RLinf/RLinf-Pi05-LIBERO-SFT](https://huggingface.co/RLinf/RLinf-Pi05-LIBERO-SFT)，revision `45ccfcc4e28634f1576ebf78cab0fbe2fd82432d`，包含 `model.safetensors` 和 `physical-intelligence/libero/norm_stats.json`。
+- openpi tokenizer 缓存位于 `$TABLETOP_PI05_ROOT/.cache/openpi/big_vision/paligemma_tokenizer.model`。
+
+推理采用 `pi05_libero` 配置、10 次去噪、选定参数 BF16；禁用首次推理的 `torch.compile` 编译，加载最长等待 300 秒，单次推理最长等待 60 秒。取消等待会关闭子进程，下次使用重新加载。
+
+输入状态是世界系末端 XYZ、XY ZW 四元数转换的轴角和两指关节位置，共 8 维。两张 RGB 图片采用上游 LIBERO 评测的原始渲染旋转 180° 约定。输出 `(10, 7)` 是 LIBERO 已归一化的 OSC 位姿增量和夹爪指令，限幅到 `[-1,1]` 后直接送入控制器：平移每单位 0.05 m、旋转每单位 0.5 rad，夹爪 -1 开、+1 闭。它**不再经过**下方通用接口的米制归一化，也不反转夹爪符号。物体真实位置仅供独立评测使用，不输入策略。
+
+每轮保存模型版本、翻译结果、实际相机输入、初始本体状态、动作、预测耗时及视频。运行日志位于 `runs/pi05-worker.log`。独立动作检查入口为 `.venv/bin/python scripts/probe_pi05.py`；运行前确认同卡没有其他测试实例。
+
+### 通用接口
 
 `tabletop.vlm.VLM.infer(image, instruction, history, stop, wrist_image=None)` 可选接收腕部图片，返回经过严格校验的 JSON：
 

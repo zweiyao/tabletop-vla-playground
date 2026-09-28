@@ -5,6 +5,7 @@ import threading
 from pathlib import Path
 from datetime import datetime, timezone
 import imageio.v2 as imageio
+import numpy as np
 from PIL import Image
 from .scene import TabletopEnv
 from .skills import Skills, SkillError
@@ -16,6 +17,7 @@ class Engine:
         self.stop = threading.Event()
         self.env = TabletopEnv(seed)
         self.vlm = VLM() if load_model else None
+        self.pi05 = None
         self.reset(seed)
 
     def reset(self, seed):
@@ -27,7 +29,11 @@ class Engine:
         self.skills.steps = 0
         return self.env.images()
 
-    def run(self, instruction, emit, use_wrist=False):
+    def run(self, instruction, emit, use_wrist=False, mode="vlm", max_steps=300):
+        if mode == "pi05":
+            return self.run_pi05(instruction, emit, max_steps)
+        if mode != "vlm":
+            raise ValueError("未知模型选项")
         self.stop.clear()
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
         out = Path("runs") / stamp
@@ -83,4 +89,69 @@ class Engine:
             if frames:
                 imageio.mimsave(out / "video.mp4", frames, fps=2, macro_block_size=16)
             emit(images, "\n".join(status + [final]))
+        return log
+
+    def run_pi05(self, instruction, emit, max_steps=300):
+        from .pi05 import Pi05, MODEL_ID as PI05_ID, MODEL_REVISION as PI05_REVISION
+        max_steps = int(max_steps)
+        if not 5 <= max_steps <= 1000:
+            raise ValueError("π0.5 执行步数必须在 5–1000 之间")
+        self.stop.clear()
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
+        out = Path("runs") / stamp
+        out.mkdir(parents=True)
+        log = {"model": PI05_ID, "revision": PI05_REVISION, "mode": "pi05", "seed": self.seed,
+               "instruction": instruction, "cameras": ["agentview", "wrist"], "started": stamp,
+               "max_steps": max_steps, "steps": 0, "actions": [], "timings": [],
+               "action_format": "LIBERO normalized OSC delta xyz/rotvec/gripper, clipped [-1,1]"}
+        frames = []
+        started = time.monotonic()
+        final = ""
+        try:
+            english = instruction
+            if any("\u4e00" <= c <= "\u9fff" for c in instruction):
+                emit(self.env.images(), "正在将任务翻译为 π0.5 使用的英文指令…")
+                english = self.vlm.translate_instruction(instruction, self.stop)
+            log["policy_instruction"] = english
+            if self.stop.is_set():
+                raise RuntimeError("用户已停止")
+            if self.pi05 is None or not self.pi05.alive:
+                emit(self.env.images(), "正在加载 π0.5，首次使用需要稍等…")
+                self.pi05 = Pi05(self.stop)
+            while log["steps"] < max_steps:
+                if self.stop.is_set():
+                    raise RuntimeError("用户已停止")
+                observation = self.env.pi05_observation()
+                if log["steps"] == 0:
+                    Image.fromarray(observation["image"]).save(out / "input-agent.png")
+                    Image.fromarray(observation["wrist_image"]).save(out / "input-wrist.png")
+                    log["initial_state"] = observation["state"].tolist()
+                chunk, timing = self.pi05.infer(observation, english, self.stop)
+                log["timings"].append(timing)
+                for action in chunk[:min(5, max_steps-log["steps"])]:
+                    if self.stop.is_set():
+                        raise RuntimeError("用户已停止")
+                    self.env.step(action)
+                    log["actions"].append(action.tolist())
+                    log["steps"] += 1
+                    if not np.isfinite(self.env.sim.data.qpos).all():
+                        raise RuntimeError("仿真出现非有限状态，已停止")
+                images = self.env.images(size=384)
+                frames.append(images["front"])
+                emit(images, f"π0.5 正在执行：{english}\n进度：{log['steps']} / {max_steps} 步，可随时停止。")
+            final = f"π0.5 已执行 {log['steps']} 步。请根据画面检查任务结果；执行结束不代表任务成功。"
+            log["termination"] = "step_limit"
+        except (ValueError, RuntimeError) as exc:
+            log["error"] = str(exc)
+            log["termination"] = "stopped" if self.stop.is_set() else "error"
+            final = f"已停止：{exc}"
+        finally:
+            log["answer"] = final
+            log["seconds"] = time.monotonic() - started
+            (out / "interaction.json").write_text(json.dumps(log, ensure_ascii=False, indent=2))
+            images = self.env.images()
+            Image.fromarray(images["front"]).save(out / "final.png")
+            if frames:
+                imageio.mimsave(out / "video.mp4", frames, fps=4, macro_block_size=16)
+            emit(images, final)
         return log

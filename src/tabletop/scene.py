@@ -74,3 +74,15 @@ class TabletopEnv(ManipulationEnv):
         self.rng = np.random.default_rng(int(seed))
         self.sampler.rng = self.rng
         return self.reset()
+
+    def pi05_observation(self):
+        obs = self._get_observations()
+        quat = np.asarray(obs["robot0_eef_quat"], dtype=float).copy()  # xyzw, world frame
+        w = np.clip(quat[3], -1, 1)
+        denominator = np.sqrt(1 - w * w)
+        axis_angle = np.zeros(3) if np.isclose(denominator, 0) else quat[:3] * (2 * np.arccos(w) / denominator)
+        # Match RLinf's LIBERO evaluator: raw MuJoCo frames rotated by 180 degrees.
+        def camera(name):
+            return np.ascontiguousarray(self.sim.render(width=256, height=256, camera_name=name)[::-1, ::-1])
+        return {"image": camera("agentview"), "wrist_image": camera("robot0_eye_in_hand"),
+                "state": np.concatenate([obs["robot0_eef_pos"], axis_angle, obs["robot0_gripper_qpos"]]).astype(np.float32)}

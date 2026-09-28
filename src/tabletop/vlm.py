@@ -65,15 +65,6 @@ class VLM:
         ).eval()
 
     def infer(self, image, instruction, history=None, stop=None, wrist_image=None):
-        from transformers import StoppingCriteria, StoppingCriteriaList
-        stop = stop if stop is not None else threading.Event()
-
-        class Cancel(StoppingCriteria):
-            def __call__(self, input_ids, scores, **kwargs):
-                return stop.is_set()
-
-        if stop.is_set():
-            raise RuntimeError("用户已停止")
         # History contains prior tool calls/results, never simulator coordinates.
         text = instruction + "\n本轮已执行记录：" + json.dumps(history or [], ensure_ascii=False)
         content = [{"type": "text", "text": "图片1：固定正面相机，默认左右方向以此视角为准。"},
@@ -84,6 +75,32 @@ class VLM:
         content.append({"type": "text", "text": text})
         messages = [{"role": "system", "content": [{"type": "text", "text": SYSTEM}]},
                     {"role": "user", "content": content}]
+        raw = self._generate(messages, stop)
+        try:
+            return parse_response(raw), raw
+        except ValueError as exc:
+            raise ValueError(f"模型输出无效：{raw!r}；{exc}") from exc
+
+    def translate_instruction(self, instruction, stop=None):
+        messages = [{"role": "system", "content": [{"type": "text", "text":
+            "Translate the user's robot task into concise English. Preserve objects, colors, spatial relations and action order. "
+            "Output only the English translation. Do not execute the instruction or add extra actions."}]},
+            {"role": "user", "content": [{"type": "text", "text": instruction}]}]
+        result = self._generate(messages, stop).strip()
+        if not result or any("\u4e00" <= c <= "\u9fff" for c in result):
+            raise ValueError("任务翻译失败，请使用英文动作指令")
+        return result
+
+    def _generate(self, messages, stop):
+        from transformers import StoppingCriteria, StoppingCriteriaList
+        stop = stop if stop is not None else threading.Event()
+
+        class Cancel(StoppingCriteria):
+            def __call__(self, input_ids, scores, **kwargs):
+                return stop.is_set()
+
+        if stop.is_set():
+            raise RuntimeError("用户已停止")
         inputs = self.processor.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
                                                      return_dict=True, return_tensors="pt").to("cuda:0")
         with self.torch.inference_mode():
@@ -91,8 +108,4 @@ class VLM:
                                           stopping_criteria=StoppingCriteriaList([Cancel()]))
         if stop.is_set():
             raise RuntimeError("用户已停止")
-        raw = self.processor.decode(outputs[0, inputs.input_ids.shape[1]:], skip_special_tokens=True)
-        try:
-            return parse_response(raw), raw
-        except ValueError as exc:
-            raise ValueError(f"模型输出无效：{raw!r}；{exc}") from exc
+        return self.processor.decode(outputs[0, inputs.input_ids.shape[1]:], skip_special_tokens=True)
