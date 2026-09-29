@@ -3,6 +3,7 @@ import json
 import os
 import time
 import threading
+import uuid
 from pathlib import Path
 from datetime import datetime, timezone
 import imageio.v2 as imageio
@@ -14,7 +15,9 @@ from .vlm import VLM, MODEL_ID, MODEL_REVISION
 
 
 class Engine:
-    def __init__(self, seed=0, load_model=True):
+    def __init__(self, seed=0, load_model=True, hybrid_settings=None):
+        from .hybrid_config import load_config
+        self.hybrid_settings = hybrid_settings or load_config()
         self.stop = threading.Event()
         self.env = TabletopEnv(seed)
         self.vlm = VLM() if load_model else None
@@ -28,6 +31,9 @@ class Engine:
         self.skills = Skills(self.env, self.stop)
         self.skills.wait(15)
         self.skills.steps = 0
+        from .hybrid import robot_snapshot
+        self.scene_id = uuid.uuid4().hex
+        self.initial_robot = robot_snapshot(self.env)
         return self.env.images()
 
     def pi05_status(self):
@@ -57,7 +63,18 @@ class Engine:
             self.pi05 = None
         return self.pi05_status()
 
-    def run(self, instruction, emit, use_wrist=False, mode="vlm", max_steps=300):
+    def run(self, instruction, emit, use_wrist=False, mode="vlm", max_steps=300,
+            hybrid_weight="pi05_lora", reviewer_model=None):
+        if mode == "hybrid":
+            from .hybrid import HybridSession
+            config, models = self.hybrid_settings
+            if hybrid_weight not in ("pi05", "pi05_lora"):
+                raise ValueError("混合模式权重选项无效")
+            model = models.get(reviewer_model or config.default_model)
+            if model is None:
+                raise ValueError("所选审查模型不在配置中")
+            adapter = os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best") if hybrid_weight == "pi05_lora" else None
+            return self.run_pi05(instruction, emit, max_steps, adapter, HybridSession(config, model))
         if mode in ("pi05", "pi05_lora"):
             adapter = os.environ.get("TABLETOP_PI05_LORA", "adapters/tabletop-four-v1/best") if mode == "pi05_lora" else None
             return self.run_pi05(instruction, emit, max_steps, adapter)
@@ -120,7 +137,7 @@ class Engine:
             emit(images, "\n".join(status + [final]))
         return log
 
-    def run_pi05(self, instruction, emit, max_steps=300, adapter=None):
+    def run_pi05(self, instruction, emit, max_steps=300, adapter=None, review_session=None):
         from .pi05 import MODEL_ID as PI05_ID, MODEL_REVISION as PI05_REVISION
         max_steps = int(max_steps)
         if not 5 <= max_steps <= 1000:
@@ -137,6 +154,13 @@ class Engine:
         started = time.monotonic()
         final = ""
         try:
+            if review_session:
+                if max_steps % review_session.config.execute_steps:
+                    raise ValueError("混合模式步数上限必须是 5 的倍数")
+                log["mode"] = "hybrid"
+                log["hybrid"] = review_session.snapshot()
+                log["scene_id"] = self.scene_id
+                (out / "review-prompt.md").write_text(review_session.prompt)
             adapter = str(Path(adapter).resolve()) if adapter else None
             if self.pi05 is None or not self.pi05.alive:
                 raise RuntimeError("π0.5 未启动，请先点击“启动 π0.5”")
@@ -147,6 +171,9 @@ class Engine:
                 if not config_path.is_file() or not (Path(adapter) / "adapter.safetensors").is_file():
                     raise RuntimeError("LoRA 权重尚未准备好")
                 log["adapter"] = {"path": adapter, "config": json.loads(config_path.read_text())}
+            if review_session:
+                emit(self.env.images(), "正在检查 OpenRouter 模型、密钥和费用上限…")
+                review_session.preflight(self.stop)
             english = instruction
             if any("\u4e00" <= c <= "\u9fff" for c in instruction):
                 emit(self.env.images(), "正在将任务翻译为 π0.5 使用的英文指令…")
@@ -164,17 +191,30 @@ class Engine:
                     log["initial_state"] = observation["state"].tolist()
                 chunk, timing = self.pi05.infer(observation, english, self.stop)
                 log["timings"].append(timing)
-                for action in chunk[:min(5, max_steps-log["steps"])]:
-                    if self.stop.is_set():
-                        raise RuntimeError("用户已停止")
-                    self.env.step(action)
-                    log["actions"].append(action.tolist())
-                    log["steps"] += 1
-                    if not np.isfinite(self.env.sim.data.qpos).all():
-                        raise RuntimeError("仿真出现非有限状态，已停止")
+                if review_session:
+                    emit(self.env.images(), f"VLM 正在审查未来 10 步，仿真暂不前进…\n进度：{log['steps']} / {max_steps}")
+                    chunk = review_session.choose(self.env, chunk, instruction, english, self.initial_robot,
+                                                  self.scene_id, log["steps"], out, self.stop)
+                executed = []
+                try:
+                    for action in chunk[:min(5, max_steps-log["steps"])]:
+                        if self.stop.is_set():
+                            raise RuntimeError("用户已停止")
+                        if review_session and self.scene_id != log["scene_id"]:
+                            raise RuntimeError("场景已变化，拒绝执行过期动作")
+                        self.env.step(action)
+                        executed.append(action.tolist())
+                        log["actions"].append(action.tolist())
+                        log["steps"] += 1
+                        if not np.isfinite(self.env.sim.data.qpos).all():
+                            raise RuntimeError("仿真出现非有限状态，已停止")
+                finally:
+                    if review_session:
+                        review_session.record_execution(executed)
                 images = self.env.images(size=384)
                 frames.append(images["front"])
-                emit(images, f"π0.5 正在执行：{english}\n进度：{log['steps']} / {max_steps} 步，可随时停止。")
+                review_status = f"\n{review_session.status()}" if review_session else ""
+                emit(images, f"π0.5 正在执行：{english}{review_status}\n进度：{log['steps']} / {max_steps} 步，可随时停止。")
             final = f"π0.5 已执行 {log['steps']} 步。请根据画面检查任务结果；执行结束不代表任务成功。"
             log["termination"] = "step_limit"
         except (ValueError, RuntimeError) as exc:
@@ -182,6 +222,9 @@ class Engine:
             log["termination"] = "stopped" if self.stop.is_set() else "error"
             final = f"已停止：{exc}"
         finally:
+            if review_session:
+                log["hybrid_metrics"] = review_session.metrics()
+                log["reviews"] = review_session.records
             log["answer"] = final
             log["seconds"] = time.monotonic() - started
             (out / "interaction.json").write_text(json.dumps(log, ensure_ascii=False, indent=2))

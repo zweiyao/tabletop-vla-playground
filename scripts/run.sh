@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
+if [[ -f .env ]]; then
+    set -a
+    source .env
+    set +a
+fi
+if [[ -z "${OPENROUTER_API_KEY:-}" && -f openrouter_key ]]; then
+    export OPENROUTER_API_KEY="$(<openrouter_key)"
+fi
 export TABLETOP_GPU="${TABLETOP_GPU:-0}"
 export HF_HOME="$PWD/.cache/huggingface"
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"

@@ -1,0 +1,104 @@
+{
+  "model": "qwen/qwen3.7-flash",
+  "source": "runs/20260928T110905.202931Z/review-0000",
+  "paid": true,
+  "passed": true,
+  "decision": {
+    "proposal_id": "f4315242df9c4d3599567d1d5c744e7e:0:de6cadb64df94323876b282c8aaf043f",
+    "previous_assessment": "首轮评估，无历史执行记录",
+    "next_intent": "规划从初始位置向红方块移动并尝试抓取，意图与任务一致",
+    "decision": "accept",
+    "reason": "当前机器人位于红方块右侧（+X方向），提案序列包含向左（-X）及微调Y轴的位移以对准红方块，且保持手指张开，符合抓取红方块的初始动作逻辑。",
+    "corrections": null
+  },
+  "selected_actions": [
+    [
+      0.4389731784588111,
+      -0.5203950266748081,
+      -0.3548780441676862,
+      0.012017285509976272,
+      -0.02287804747982225,
+      0.014103284738468669,
+      -0.9957180224214602
+    ],
+    [
+      0.46615941099691405,
+      -0.5325553316291352,
+      -0.3389385826798075,
+      0.010964677226760866,
+      -0.012317604450618358,
+      0.01068713129871246,
+      -0.9959180156960667
+    ],
+    [
+      0.5026215285601745,
+      -0.5501542079149448,
+      -0.33992322725494195,
+      0.0045565980811130835,
+      -0.009151415022076392,
+      0.012587522053554956,
+      -0.9947807476231849
+    ],
+    [
+      0.5628363632811444,
+      -0.5405695907382961,
+      -0.3468548955272728,
+      0.004517234011017557,
+      -0.0034919088047851154,
+      0.007728291142207189,
+      -0.9891692557548739
+    ],
+    [
+      0.6005207655278644,
+      -0.5326683835385942,
+      -0.3364249879493517,
+      0.0024922679521295343,
+      -0.0009124361606334119,
+      0.0047069282897853615,
+      -0.9903641500186212
+    ]
+  ],
+  "response": {
+    "id": "gen-1790662423-ivVsl2BXewrYSIwSqq3O",
+    "model": "qwen/qwen3.7-flash",
+    "usage": {
+      "prompt_tokens": 5939,
+      "completion_tokens": 178,
+      "total_tokens": 6117,
+      "cost": 0.00020131,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00020131,
+        "upstream_inference_prompt_cost": 0.00017817,
+        "upstream_inference_completions_cost": 2.314e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"proposal_id\": \"f4315242df9c4d3599567d1d5c744e7e:0:de6cadb64df94323876b282c8aaf043f\",\n  \"previous_assessment\": \"首轮评估，无历史执行记录\",\n  \"next_intent\": \"规划从初始位置向红方块移动并尝试抓取，意图与任务一致\",\n  \"decision\": \"accept\",\n  \"reason\": \"当前机器人位于红方块右侧（+X方向），提案序列包含向左（-X）及微调Y轴的位移以对准红方块，且保持手指张开，符合抓取红方块的初始动作逻辑。\",\n  \"corrections\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "seconds": 5.116674592718482,
+    "accounted_cost_usd": 0.00020131
+  }
+}

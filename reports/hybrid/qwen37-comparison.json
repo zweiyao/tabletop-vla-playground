@@ -1,0 +1,82 @@
+[
+  {
+    "task": "red",
+    "seed": 42000,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T062410.964407Z",
+    "seconds": 5.240687780082226,
+    "metrics": null,
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "red",
+    "seed": 42000,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T062416.546216Z",
+    "seconds": 109.29699713084847,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.00233188,
+      "unconfirmed_costs": 0,
+      "review_seconds": 94.88723088242114
+    },
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "home",
+    "seed": 42003,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T062606.263238Z",
+    "seconds": 4.956288973800838,
+    "metrics": null,
+    "final_snapshot_score": {
+      "position_error_m": 0.17205876997093217,
+      "rotation_error_rad": 0.0801195255846747,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "home",
+    "seed": 42003,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T062611.642684Z",
+    "seconds": 77.47687253542244,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.00238465,
+      "unconfirmed_costs": 0,
+      "review_seconds": 63.83188334479928
+    },
+    "final_snapshot_score": {
+      "position_error_m": 0.12483327159398348,
+      "rotation_error_rad": 0.08924186693309481,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  }
+]

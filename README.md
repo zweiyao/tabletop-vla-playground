@@ -123,6 +123,8 @@ TABLETOP_GPU=0 .venv/bin/python scripts/evaluate_vlm.py
 
 ## 项目结构
 
+混合模式的启动、配置、候选 VLM、10 步审查/5 步执行机制及费用管理见 [混合模式说明](docs/hybrid.md)。保持现有 Panda 环境，新增模式不调用脚本抓放技能。
+
 - `src/tabletop/`：场景、技能、VLM、VLA 接口、交互循环与网页。
 - `scripts/`：安装、模型下载和验收入口。
 - `tests/`：结构化输出和动作契约测试。

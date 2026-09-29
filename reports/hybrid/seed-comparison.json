@@ -1,0 +1,162 @@
+[
+  {
+    "task": "red",
+    "seed": 42000,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061528.197116Z",
+    "seconds": 5.406472501344979,
+    "metrics": null,
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "red",
+    "seed": 42000,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061533.950947Z",
+    "seconds": 58.44391195755452,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.012457300000000001,
+      "unconfirmed_costs": 0,
+      "review_seconds": 44.43911871127784
+    },
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "green",
+    "seed": 42001,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061632.673179Z",
+    "seconds": 5.158338855020702,
+    "metrics": null,
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8200383599180482,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "green",
+    "seed": 42001,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061638.122273Z",
+    "seconds": 56.03127882163972,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.012476500000000001,
+      "unconfirmed_costs": 0,
+      "review_seconds": 42.43196523375809
+    },
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.819783941717636,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "blue",
+    "seed": 42002,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061734.432415Z",
+    "seconds": 5.030578300356865,
+    "metrics": null,
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "blue",
+    "seed": 42002,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061739.743237Z",
+    "seconds": 53.07628999091685,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.012520400000000001,
+      "unconfirmed_costs": 0,
+      "review_seconds": 39.86283104121685
+    },
+    "final_snapshot_score": {
+      "held": false,
+      "cube_z_m": 0.8197844891595659,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "home",
+    "seed": 42003,
+    "mode": "pi05",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061833.242656Z",
+    "seconds": 5.113183366134763,
+    "metrics": null,
+    "final_snapshot_score": {
+      "position_error_m": 0.09921572433736511,
+      "rotation_error_rad": 0.10486885951893099,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  },
+  {
+    "task": "home",
+    "seed": 42003,
+    "mode": "hybrid",
+    "steps": 50,
+    "termination": "step_limit",
+    "error": null,
+    "started": "20260929T061838.775246Z",
+    "seconds": 52.75316480267793,
+    "metrics": {
+      "reviews": 10,
+      "corrections": 0,
+      "api_cost_usd": 0.0126257,
+      "unconfirmed_costs": 0,
+      "review_seconds": 38.751652549020946
+    },
+    "final_snapshot_score": {
+      "position_error_m": 0.09434016986231718,
+      "rotation_error_rad": 0.07195114813155004,
+      "final_task_condition": false
+    },
+    "note": "short integration trial; final snapshot only, not a success-rate benchmark"
+  }
+]

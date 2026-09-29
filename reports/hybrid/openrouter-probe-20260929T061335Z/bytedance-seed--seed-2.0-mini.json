@@ -1,0 +1,104 @@
+{
+  "model": "bytedance-seed/seed-2.0-mini",
+  "source": "runs/20260928T110905.202931Z/review-0000",
+  "paid": true,
+  "passed": true,
+  "decision": {
+    "proposal_id": "f4315242df9c4d3599567d1d5c744e7e:0:de6cadb64df94323876b282c8aaf043f",
+    "previous_assessment": "无上一轮执行，初始状态机械臂在桌面上方，红、绿、蓝立方体在桌面",
+    "next_intent": "接下来动作是向红色立方体移动以执行拾取，符合任务目标",
+    "decision": "accept",
+    "reason": " proposal的动作是向红色立方体方向移动， gripper保持张开，符合拾取红色立方体的任务意图，无可见错误",
+    "corrections": null
+  },
+  "selected_actions": [
+    [
+      0.4389731784588111,
+      -0.5203950266748081,
+      -0.3548780441676862,
+      0.012017285509976272,
+      -0.02287804747982225,
+      0.014103284738468669,
+      -0.9957180224214602
+    ],
+    [
+      0.46615941099691405,
+      -0.5325553316291352,
+      -0.3389385826798075,
+      0.010964677226760866,
+      -0.012317604450618358,
+      0.01068713129871246,
+      -0.9959180156960667
+    ],
+    [
+      0.5026215285601745,
+      -0.5501542079149448,
+      -0.33992322725494195,
+      0.0045565980811130835,
+      -0.009151415022076392,
+      0.012587522053554956,
+      -0.9947807476231849
+    ],
+    [
+      0.5628363632811444,
+      -0.5405695907382961,
+      -0.3468548955272728,
+      0.004517234011017557,
+      -0.0034919088047851154,
+      0.007728291142207189,
+      -0.9891692557548739
+    ],
+    [
+      0.6005207655278644,
+      -0.5326683835385942,
+      -0.3364249879493517,
+      0.0024922679521295343,
+      -0.0009124361606334119,
+      0.0047069282897853615,
+      -0.9903641500186212
+    ]
+  ],
+  "response": {
+    "id": "gen-1790662418-ifJG76MgrEIlrMyFTGqq",
+    "model": "bytedance-seed/seed-2.0-mini",
+    "usage": {
+      "prompt_tokens": 8735,
+      "completion_tokens": 160,
+      "total_tokens": 8895,
+      "cost": 0.0009375,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0009375,
+        "upstream_inference_prompt_cost": 0.0008735,
+        "upstream_inference_completions_cost": 6.4e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"proposal_id\": \"f4315242df9c4d3599567d1d5c744e7e:0:de6cadb64df94323876b282c8aaf043f\", \"previous_assessment\": \"无上一轮执行，初始状态机械臂在桌面上方，红、绿、蓝立方体在桌面\", \"next_intent\": \"接下来动作是向红色立方体移动以执行拾取，符合任务目标\", \"decision\": \"accept\", \"reason\": \" proposal的动作是向红色立方体方向移动， gripper保持张开，符合拾取红色立方体的任务意图，无可见错误\", \"corrections\": null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "seconds": 3.722815189510584,
+    "accounted_cost_usd": 0.0009375
+  }
+}
