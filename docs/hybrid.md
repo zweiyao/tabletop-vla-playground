@@ -48,6 +48,7 @@
 
 | 模型 | 输入 / 输出 | 选择理由 |
 | --- | --- | --- |
+| [Qwen3.8 Max Prime](https://openrouter.ai/qwen/qwen3.8-max-prime) | 4.00 / 12.00 | 用户新增选项，2026-09-29 核对；图像输入、JSON Schema，强制推理采用 minimal |
 | [Qwen3.8 Flash](https://openrouter.ai/qwen/qwen3.8-flash) | 0.15 / 0.47 | 图像审查候选；实测原生 schema 不稳定，改用 JSON object + 本地校验；曾遇上游限流 |
 | [Qwen3.7 Flash](https://openrouter.ai/qwen/qwen3.7-flash) | 0.03 / 0.13 | 默认；通过夹爪合成错误纠正测试；使用 JSON object + 本地严格校验 |
 | [Seed 2.0 Mini](https://openrouter.ai/bytedance-seed/seed-2.0-mini) | 0.10 / 0.40 | 对照；真实闭环格式稳定，但在夹爪合成错误测试中误放行 |

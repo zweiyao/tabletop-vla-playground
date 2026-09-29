@@ -1,5 +1,17 @@
 # USD per million tokens, verified against OpenRouter on 2026-09-28.
 # Price caps are sent to OpenRouter; unavailable models never silently fall back.
+# Max Prime metadata and prices verified on 2026-09-29.
+[[models]]
+id = "qwen/qwen3.8-max-prime"
+label = "Qwen3.8 Max Prime"
+input_price = 4.0
+output_price = 12.0
+budget_input_price = 4.0
+budget_output_price = 12.0
+context_tokens = 1000000
+response_format = "json_schema"
+reasoning = "minimal" # reasoning is mandatory for this model
+
 [[models]]
 id = "qwen/qwen3.8-flash"
 label = "Qwen3.8 Flash · 可能限流"
