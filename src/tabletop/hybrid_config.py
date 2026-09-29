@@ -19,6 +19,7 @@ class HybridConfig(BaseModel):
     timeout_seconds: float = Field(default=30, gt=0, le=120)
     max_output_tokens: int = Field(default=1024, ge=256, le=4096)
     temperature: float = Field(default=0, ge=0, le=1)
+    enforce_budget: bool = True
     budget_usd: float = Field(default=1, gt=0, le=1)
     stop_spend_usd: float = Field(default=0.9, gt=0)
     ledger_path: str = "runs/openrouter-budget.json"

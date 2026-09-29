@@ -18,7 +18,7 @@ API_BASE = "https://openrouter.ai/api/v1"
 
 
 class SpendLedger:
-    """Reserve the full model-context upper bound; uncertain charges block more calls."""
+    """Record reservations and charges; optionally enforce the project spend cap."""
     def __init__(self, path, config):
         self.path, self.config = Path(path), config
 
@@ -37,10 +37,10 @@ class SpendLedger:
         # A deliberately loose upper bound, not an image-token estimate.
         bound = ((model.context_tokens * model.budget_input_price + self.config.max_output_tokens * model.budget_output_price) / 1e6 + 4 * model.image_price) * 1.05
         with self.locked() as state:
-            if state["pending"] or state.get("blocked"):
+            if self.config.enforce_budget and (state["pending"] or state.get("blocked")):
                 raise RuntimeError("上次接口费用尚未确认，停止付费调用；请核对费用记录")
             spent = max(float(state["spent_usd"]), key_usage)
-            if not math.isfinite(spent) or spent + bound > self.config.stop_spend_usd:
+            if self.config.enforce_budget and (not math.isfinite(spent) or spent + bound > self.config.stop_spend_usd):
                 raise RuntimeError("OpenRouter 预算余量不足，已停止本轮")
             reservation = uuid.uuid4().hex
             state["pending"][reservation] = {"upper_bound_usd": bound, "model": model.id, "time": time.time()}
@@ -48,14 +48,17 @@ class SpendLedger:
 
     def settle(self, reservation, cost, generation_id):
         if isinstance(cost, bool) or not isinstance(cost, (int, float)) or not math.isfinite(cost) or cost < 0:
-            raise RuntimeError("接口未返回有效费用，暂停后续调用以防超支")
+            if self.config.enforce_budget:
+                raise RuntimeError("接口未返回有效费用，暂停后续调用以防超支")
+            # Keep an unresolved charge in the ledger without blocking control.
+            return
         with self.locked() as state:
             pending = state["pending"].pop(reservation)
             state["spent_usd"] += cost
             state["requests"].append(pending | {"cost_usd": cost, "generation_id": generation_id})
-            if cost > pending["upper_bound_usd"] + 1e-9:
+            if self.config.enforce_budget and cost > pending["upper_bound_usd"] + 1e-9:
                 state["blocked"] = True
-        if cost > pending["upper_bound_usd"] + 1e-9:
+        if self.config.enforce_budget and cost > pending["upper_bound_usd"] + 1e-9:
             raise RuntimeError("实际费用超出预留上限，已禁用后续付费调用")
 
 
@@ -171,7 +174,7 @@ class OpenRouterReviewer:
         reservation = self.ledger.reserve(self.model, self.key_usage)
         started = time.monotonic()
         # On timeout/cancellation the pending reservation intentionally remains:
-        # the provider may still bill the request. No further calls until reconciled.
+        # the provider may still bill the request. Only budget-enforced mode blocks.
         result = self.request("POST", "/chat/completions", stop, payload)
         usage = result.get("usage")
         if not isinstance(usage, dict):

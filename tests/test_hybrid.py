@@ -56,6 +56,7 @@ def test_schema_rejects_extra_commands(extra):
 
 def test_budget_persists_and_uncertain_charge_blocks(tmp_path):
     config, models = load_config()
+    config = config.model_copy(update={"enforce_budget": True})
     model = models[config.default_model]
     path = tmp_path / "budget.json"
     ledger = SpendLedger(path, config)
@@ -71,8 +72,43 @@ def test_budget_persists_and_uncertain_charge_blocks(tmp_path):
 
 def reviewer_fixture(tmp_path):
     config, models = load_config()
+    config = config.model_copy(update={"enforce_budget": True})
     return OpenRouterReviewer(config, models[config.default_model], "test prompt",
                               SpendLedger(tmp_path / "ledger.json", config), api_key="test-only")
+
+
+def test_unlimited_mode_keeps_accounting_without_blocking(tmp_path):
+    config, models = load_config()
+    assert config.enforce_budget is False
+    ledger = SpendLedger(tmp_path / "ledger.json", config)
+    model = models[config.default_model]
+    unresolved = ledger.reserve(model, 50)
+    ledger.settle(unresolved, None, "missing-cost")
+    with ledger.locked() as state:
+        state["blocked"] = True  # A historical budget flag must not relock this mode.
+    current = SpendLedger(ledger.path, config).reserve(model, 50)
+    ledger.settle(current, 2, "known-cost")
+    state = json.loads(ledger.path.read_text())
+    assert unresolved in state["pending"]
+    assert current not in state["pending"]
+    assert state["spent_usd"] == 2
+    assert state["requests"][-1]["generation_id"] == "known-cost"
+
+
+def test_unlimited_missing_cost_still_validates_review(tmp_path):
+    reviewer = reviewer_fixture(tmp_path)
+    reviewer.config = reviewer.config.model_copy(update={"enforce_budget": False})
+    reviewer.ledger.config = reviewer.config
+    mocked_requests(reviewer, {"usage": {}, "choices": [
+        {"finish_reason": "stop", "message": {"content": decision().model_dump_json()}}]})
+    stop = threading.Event()
+    reviewer.preflight(stop)
+    assert reviewer.review({}, [], stop).decision == "accept"
+    assert reviewer.review({}, [], stop).decision == "accept"
+    assert len(json.loads(reviewer.ledger.path.read_text())["pending"]) == 2
+    mocked_requests(reviewer, {"usage": {}, "choices": []})
+    with pytest.raises(ValueError, match="非法"):
+        reviewer.review({}, [], stop)
 
 
 def mocked_requests(reviewer, response=None, key_update=None):

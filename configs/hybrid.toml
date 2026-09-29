@@ -7,6 +7,7 @@ rotation_limit_rad = 0.05
 timeout_seconds = 30
 max_output_tokens = 1024
 temperature = 0.0
+enforce_budget = false
 budget_usd = 1.0
 stop_spend_usd = 0.90
 ledger_path = "runs/openrouter-budget.json"

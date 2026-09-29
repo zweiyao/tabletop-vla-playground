@@ -111,7 +111,9 @@ def main():
                 reviewer_model = gr.Dropdown(choices=[(m.label, m.id) for m in reviewer_models.values() if not m.disabled_reason],
                                             value=hybrid_config.default_model, label="审查 VLM · OpenRouter", interactive=True)
             key_state = "已配置密钥，发送时检查额度。" if os.getenv("OPENROUTER_API_KEY") else "尚未配置密钥：请在远程 .env 配置 OPENROUTER_API_KEY 后重启服务。"
-            gr.Markdown("审查未来 10 步，每次执行前 5 步；失败即停止。本轮联调总预算上限 $1。\n\n" + key_state)
+            budget_state = (f"累计预算上限 ${hybrid_config.budget_usd:g}。" if hybrid_config.enforce_budget
+                            else "项目费用限制已关闭，费用仍会记录。")
+            gr.Markdown("审查未来 10 步，每次执行前 5 步；失败即停止。" + budget_state + "\n\n" + key_state)
         with gr.Row():
             pi05_toggle = gr.Button("启动 π0.5")
             pi05_state = gr.Textbox(value="π0.5 未启动", label="π0.5 运行状态", interactive=False)
